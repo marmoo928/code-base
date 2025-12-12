@@ -1,65 +1,68 @@
-import Image from "next/image";
+import React from 'react';
+import type { Metadata } from 'next'; // Import Metadata type
+import Link from 'next/link'; // Use next/link for client-side navigation
+import FeatureCard from '@/ui/FeatureCard';
 
-export default function Home() {
+/**
+ * Define specific metadata for the homepage.
+ */
+export const metadata: Metadata = {
+  title: 'CODEBASE | Master Competitive Programming and Algorithms',
+  description: 'Your dedicated platform for competitive programming. Challenge yourself with real-world algorithms and data structures to level up your engineering skills.',
+  keywords: ['competitive programming', 'algorithms', 'data structures', 'coding challenges'],
+};
+
+/**
+ * The Root Home Page (URL: /)
+ * This is a Server Component, focusing on static, marketing content.
+ */
+const HomePage = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="flex flex-col items-center justify-center py-24 px-4 sm:px-8 text-center min-h-[70vh]">
+      
+      {/* Hero Title */}
+      <h1 className="text-6xl sm:text-7xl font-extrabold text-white mb-6 leading-tight">
+        Master Code, Build Mastery
+      </h1>
+      
+      {/* Subtitle/Description */}
+      <p className="text-xl sm:text-2xl text-stone-300 mb-12 max-w-3xl">
+        CODEBASE is your dedicated platform for competitive programming. Challenge yourself with real-world algorithms and data structures to level up your engineering skills.
+      </p>
+      
+      {/* Primary Call to Action - Using Next.js Link */}
+      <Link 
+        href="/learn" 
+        className="
+          px-10 py-4 bg-green-500 text-black text-xl sm:text-2xl font-bold 
+          rounded-xl shadow-lg 
+          hover:bg-green-400 transition-colors duration-300 
+          transform hover:scale-[1.02] active:scale-95
+        "
+      >
+        Start Solving Challenges Now →
+      </Link>
+      
+      {/* Feature Highlight Section */}
+      <div className="mt-24 w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-8">
+        <FeatureCard 
+          title="Challenge Library" 
+          description="Access a growing database of tasks across all difficulty levels and categories." 
+          icon="📚"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+        <FeatureCard 
+          title="Real-time Stats" 
+          description="Track your progress, XP, and global ranking to stay motivated." 
+          icon="📈"
+        />
+        <FeatureCard 
+          title="Structured Learning" 
+          description="Follow curated paths from basic syntax to advanced concurrency concepts." 
+          icon="🗺️"
+        />
+      </div>
     </div>
   );
-}
+};
+
+export default HomePage;
