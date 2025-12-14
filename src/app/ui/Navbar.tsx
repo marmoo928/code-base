@@ -21,9 +21,9 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 flex justify-between items-center py-3 sm:py-4 border-b border-neutral-800 px-4 sm:px-6 lg:px-8 bg-neutral-950/90 backdrop-blur-sm">
+      <nav className="sticky top-0 z-50 grid grid-cols-3 items-center py-3 sm:py-4 border-b border-neutral-800 px-4 sm:px-6 lg:px-8 bg-neutral-950/90 backdrop-blur-sm">
         
-        <div className="flex items-center">
+        <div className="flex items-center justify-start">
           <Link 
             href="/" 
             className="text-xl sm:text-2xl font-extrabold text-green-500 tracking-wider hover:text-green-400 transition-colors"
@@ -32,7 +32,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <div className="hidden lg:flex flex-grow justify-center">
+        <div className="hidden lg:flex justify-center">
           <div className="flex space-x-2 text-lg font-medium">
             {navLinks.map((link) => {
               const isActive = currentPath === link.href || (currentPath.startsWith(link.href) && link.href !== '/');
@@ -57,7 +57,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div className="hidden lg:flex items-center space-x-4">
+        <div className="hidden lg:flex items-center justify-end space-x-4">
           {isLoggedIn ? (
             <>
               <div className="text-stone-300 text-sm">
@@ -90,7 +90,7 @@ export default function Navbar() {
 
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="lg:hidden p-2 text-stone-300 hover:text-white transition-colors"
+          className="lg:hidden p-2 text-stone-300 hover:text-white transition-colors justify-self-end"
           aria-label="Toggle menu"
         >
           {isMobileMenuOpen ? (

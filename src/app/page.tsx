@@ -3,34 +3,26 @@ import type { Metadata } from 'next'; // Import Metadata type
 import Link from 'next/link'; // Use next/link for client-side navigation
 import FeatureCard from '@/ui/FeatureCard';
 
-/**
- * Define specific metadata for the homepage.
- */
+
 export const metadata: Metadata = {
-  title: 'CODEBASE | Master Competitive Programming and Algorithms',
-  description: 'Your dedicated platform for competitive programming. Challenge yourself with real-world algorithms and data structures to level up your engineering skills.',
-  keywords: ['competitive programming', 'algorithms', 'data structures', 'coding challenges'],
+  title: 'CODEBASE | Learn Programming Through Practice',
+  description: 'An interactive learning platform for students and beginners. Master programming fundamentals, algorithms, and data structures through hands-on coding exercises and challenges.',
+  keywords: ['learn programming', 'coding education', 'programming exercises', 'algorithm learning', 'computer science education', 'coding for students'],
 };
 
-/**
- * The Root Home Page (URL: /)
- * This is a Server Component, focusing on static, marketing content.
- */
+
 const HomePage = () => {
   return (
     <div className="flex flex-col items-center justify-center py-24 px-4 sm:px-8 text-center min-h-[70vh]">
       
-      {/* Hero Title */}
       <h1 className="text-6xl sm:text-7xl font-extrabold text-white mb-6 leading-tight">
-        Master Code, Build Mastery
+        Master Code, Build Skills
       </h1>
       
-      {/* Subtitle/Description */}
       <p className="text-xl sm:text-2xl text-stone-300 mb-12 max-w-3xl">
-        CODEBASE is your dedicated platform for competitive programming. Challenge yourself with real-world algorithms and data structures to level up your engineering skills.
+        CODEBASE is your interactive learning platform for programming. Practice with real exercises, learn algorithms and data structures, and build strong coding foundations.
       </p>
       
-      {/* Primary Call to Action - Using Next.js Link */}
       <Link 
         href="/learn" 
         className="
@@ -40,24 +32,23 @@ const HomePage = () => {
           transform hover:scale-[1.02] active:scale-95
         "
       >
-        Start Solving Challenges Now →
+        Start Learning Now →
       </Link>
       
-      {/* Feature Highlight Section */}
       <div className="mt-24 w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-8">
         <FeatureCard 
-          title="Challenge Library" 
-          description="Access a growing database of tasks across all difficulty levels and categories." 
+          title="Exercise Library" 
+          description="Access a growing collection of programming exercises across all difficulty levels and topics." 
           icon="📚"
         />
         <FeatureCard 
-          title="Real-time Stats" 
-          description="Track your progress, XP, and global ranking to stay motivated." 
+          title="Track Progress" 
+          description="Monitor your learning journey with XP points, statistics, and achievement tracking." 
           icon="📈"
         />
         <FeatureCard 
           title="Structured Learning" 
-          description="Follow curated paths from basic syntax to advanced concurrency concepts." 
+          description="Follow organized paths from basic programming concepts to advanced techniques." 
           icon="🗺️"
         />
       </div>

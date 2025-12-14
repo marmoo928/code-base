@@ -6,6 +6,7 @@ interface SolutionSuccessModalProps {
     nextTaskName: string; 
     nextTaskCategory: string; 
     onClose: () => void;
+    onGoBack: () => void;
     onGoToStats: () => void;
     onGoToNextTask: () => void;
 }
@@ -16,15 +17,23 @@ const SolutionSuccessModal: React.FC<SolutionSuccessModalProps> = ({
     nextTaskName,
     nextTaskCategory,
     onClose,
+    onGoBack,
     onGoToStats,
     onGoToNextTask,
 }) => {
     return (
-        
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
-            <div className="w-[489px] h-[565px] relative bg-neutral-900 rounded-2xl border border-neutral-700 shadow-2xl p-6 flex flex-col items-center">
+        <div 
+            className="fixed inset-0 z-50 flex items-center justify-center"
+            onClick={onClose}
+        >
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+            
+            <div 
+                className="w-[489px] h-[565px] relative bg-neutral-900 rounded-2xl border border-neutral-700 shadow-2xl p-6 flex flex-col items-center z-10"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <button 
-                    onClick={onClose}
+                    onClick={onGoBack}
                     className="h-11 px-6 absolute top-4 left-4 bg-green-500 rounded-xl border-2 border-black text-black text-lg font-semibold hover:bg-green-400 transition-colors flex items-center justify-center"
                 >
                     &lt; Back

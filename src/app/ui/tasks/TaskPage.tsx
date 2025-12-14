@@ -327,27 +327,29 @@ const TaskPage = ({ taskId }: { taskId: string; }) => {
             </div>
 
             {isModalOpen && (
-                <SolutionSuccessModal
-                    score={100}
-                    xpGained={task.xp}
-                    nextTaskName={nextTaskName}
-                    nextTaskCategory={nextTaskCategory}
-                    onClose={() => {
-                        setIsModalOpen(false);
+            <SolutionSuccessModal
+                score={100}
+                xpGained={task.xp}
+                nextTaskName={nextTaskName}
+                nextTaskCategory={nextTaskCategory}
+                onClose={() => {
+                    setIsModalOpen(false);
+                }}
+                onGoBack={() => {
+                    window.location.href = '/learn';
+                }}
+                onGoToStats={() => {
+                    window.location.href = '/statistics';
+                }}
+                onGoToNextTask={() => {
+                    if (nextTask) {
+                        window.location.href = `/tasks/${nextTaskIndex}`;
+                    } else {
                         window.location.href = '/learn';
-                    }}
-                    onGoToStats={() => {
-                        window.location.href = '/statistics';
-                    }}
-                    onGoToNextTask={() => {
-                        if (nextTask) {
-                            window.location.href = `/tasks/${nextTaskIndex}`;
-                        } else {
-                            window.location.href = '/learn';
-                        }
-                    }}
-                />
-            )}
+                    }
+                }}
+    />
+)}
         </div>
     );
 };
