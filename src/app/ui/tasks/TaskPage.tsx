@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { tasks } from '../../lib/placeholder-data';
-import CodeEditor from './CodeEditor';
+import { tasks } from '@/lib/placeholder-data';
+import CodeEditor from '@/ui/tasks/CodeEditor';
 import SolutionSuccessModal from './SolutionSuccessModal';
 
 interface TestResult {

@@ -1,6 +1,6 @@
 // /app/ui/statistics/StatisticsTab.tsx
 
-import FeatureCard from '../FeatureCard';
+import FeatureCard from '@/ui/FeatureCard';
 
 interface StatisticsTabProps {
     totalTasks: number;

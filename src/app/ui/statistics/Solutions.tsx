@@ -1,8 +1,8 @@
 // /app/ui/statistics/SolutionsTab.tsx
 
-import { Task } from '../../lib/placeholder-data';
-import { TaskListHeader } from '../learn/TaskListHeader';
-import { TaskListItem } from '../learn/TaskListItem';
+import { Task } from '@/lib/placeholder-data';
+import { TaskListHeader } from '@/ui/TaskListHeader';
+import { TaskListItem } from '@/ui/TaskListItem';
 
 interface SolutionsTabProps {
     solvedTasksList: Task[];
@@ -11,7 +11,7 @@ interface SolutionsTabProps {
 export const SolutionsTab = ({ solvedTasksList }: SolutionsTabProps) => {
     return (
         <div className="max-w-[980px] mx-auto">
-            
+
             <TaskListHeader />
             {solvedTasksList.length > 0 ? (
                 <div className="space-y-0">

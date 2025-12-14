@@ -3,10 +3,10 @@
 
 import { useState, useMemo } from 'react';
 import { Task, tasks as mockTasks, TaskStatus } from "../lib/placeholder-data"; 
-import { TaskListHeader } from "../ui/learn/TaskListHeader"; 
-import { TaskListItem } from "../ui/learn/TaskListItem"; 	
-import { SortButton } from "../ui/learn/SortByMenu";
-import { AppliedSortTags } from "../ui/learn/AppliedSortTags"; 
+import { TaskListHeader } from "@/ui/TaskListHeader"; 
+import { TaskListItem } from "@/ui/TaskListItem"; 	
+import { SortButton } from "@/ui/learn/SortByMenu";
+import { AppliedSortTags } from "@/ui/learn/AppliedSortTags"; 
 
 type SortKey = 'difficulty' | 'status' | 'none';
 type SortOrder = 'asc' | 'desc'; 

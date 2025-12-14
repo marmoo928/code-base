@@ -1,5 +1,5 @@
 // /src/app/tasks/[taskId]/page.tsx
-import TaskPage from "../../ui/tasks/TaskPage";
+import TaskPage from "@/ui/tasks/TaskPage";
 
 interface TaskPageProps {
   params: Promise<{

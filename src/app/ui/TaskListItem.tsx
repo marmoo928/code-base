@@ -1,8 +1,8 @@
 "use client"; 
 // ^ IMPORTANT: Added directive to make this a Client Component
 
-import { Task } from "../../lib/placeholder-data"; 
-import { DifficultyStars } from "./DifficultyStars"; 
+import { Task } from "@/lib/placeholder-data"; 
+import { DifficultyStars } from "@/ui/learn/DifficultyStars"; 
 import Link from 'next/link'; 
 import { useRouter } from 'next/navigation'; // <-- NEW: Import useRouter
 
