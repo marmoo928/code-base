@@ -6,9 +6,9 @@ interface StatusIndicatorProps {
 }
 
 const getStatusDetails = (cycle: 1 | 2 | 3) => {
-    if (cycle === 1) return { content: '✏️', color: 'text-blue-400' }; // In Progress first
-    if (cycle === 2) return { content: '✅', color: 'text-green-400' }; // Solved first
-    if (cycle === 3) return { content: '❌', color: 'text-red-400' }; // Not Solved first
+    if (cycle === 1) return { content: '✏️', color: 'text-blue-400' }; 
+    if (cycle === 2) return { content: '✅', color: 'text-green-400' };
+    if (cycle === 3) return { content: '❌', color: 'text-red-400' };
     return { content: '', color: '' };
 }
 

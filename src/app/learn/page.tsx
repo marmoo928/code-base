@@ -8,17 +8,15 @@ import { TaskListItem } from "../ui/learn/TaskListItem";
 import { SortButton } from "../ui/learn/SortByMenu";
 import { AppliedSortTags } from "../ui/learn/AppliedSortTags"; 
 
-// Define possible sort states
 type SortKey = 'difficulty' | 'status' | 'none';
 type SortOrder = 'asc' | 'desc'; 
-type StatusSortCycle = 1 | 2 | 3; // 1: In Progress first, 2: Solved first, 3: Not Solved first
+type StatusSortCycle = 1 | 2 | 3; 
 
 export default function Home() {
     const [sortKey, setSortKey] = useState<SortKey>('none');
     const [sortOrder, setSortOrder] = useState<SortOrder>('asc'); 
     const [statusCycle, setStatusCycle] = useState<StatusSortCycle>(1); 
 
-    // 2. SORTING LOGIC (omitted for brevity)
     const sortedTasks = useMemo(() => {
         const sorted = [...mockTasks]; 
 
@@ -46,27 +44,23 @@ export default function Home() {
         return sorted;
     }, [sortKey, sortOrder, statusCycle]);
 
-    // 3. CONSOLIDATED ACTION: Handles selection AND cycling/toggling on repeat clicks.
     const handleSortAction = (key: 'difficulty' | 'status') => {
         if (key === sortKey) {
-            // Case 1: Key is already active -> CYCLE/TOGGLE
             if (key === 'difficulty') {
                 setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc');
             } else if (key === 'status') {
                 setStatusCycle(prevCycle => (prevCycle % 3) + 1 as StatusSortCycle);
             }
         } else {
-            // Case 2: New key selected -> SET NEW KEY and reset order/cycle
             setSortKey(key);
             if (key === 'difficulty') {
-                setSortOrder('asc'); // Default to ascending on new selection
+                setSortOrder('asc');
             } else if (key === 'status') {
-                setStatusCycle(1); // Default to cycle 1 on new selection
+                setStatusCycle(1); 
             }
         }
     };
     
-    // 4. Clear Sort Function
     const handleClearSort = () => {
         setSortKey('none');
         setSortOrder('asc');
@@ -75,12 +69,14 @@ export default function Home() {
 
     return (
         <div className="w-full max-w-6xl mx-auto py-8">
-            {/* ... Page Title Header (omitted) ... */}
-            
-            {/* FIX: Add flex-wrap here to ensure the SortButton and Tags stack on narrow screens */}
+            <div className="flex justify-center mb-8">
+                <h1 className="text-white text-5xl font-bold border-3 border-neutral-500 rounded-lg px-10 py-6">
+                    Tasks to solve
+                </h1>
+            </div>
             <div className="mb-8 flex flex-wrap items-center gap-4">
                 <SortButton 
-                    onSortChange={handleSortAction} // MENU OPTIONS call this action
+                    onSortChange={handleSortAction} 
                     currentSortKey={sortKey}
                     currentSortOrder={sortOrder}
                     statusCycle={statusCycle}
@@ -95,7 +91,6 @@ export default function Home() {
                 />
             </div>
             
-            {/* ... Task List Header and Items (omitted) ... */}
             <TaskListHeader />
             <ul className="space-y-4">
                 {sortedTasks.map((task) => (

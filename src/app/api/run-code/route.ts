@@ -15,8 +15,6 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-
-    // Call JDoodle API from server-side (no CORS issues)
     const response = await fetch('https://api.jdoodle.com/v1/execute', {
       method: 'POST',
       headers: {

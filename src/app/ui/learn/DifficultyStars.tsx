@@ -1,13 +1,11 @@
-// Assuming Task type is imported or defined here if this is a standalone file,
-// but since the prop is just a number, we can keep it simple.
 
 interface DifficultyStarsProps {
-  difficulty: number; // The number of filled stars (1 to 5)
+  difficulty: number; 
 }
 
 export const DifficultyStars = ({ difficulty }: DifficultyStarsProps) => {
   const filled = difficulty;
-  const total = 5; // Total possible stars
+  const total = 5; 
 
   return (
     <div className="flex items-center gap-1">

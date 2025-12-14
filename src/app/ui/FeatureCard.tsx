@@ -1,20 +1,19 @@
 import React from 'react';
 
-// Define the component props using a TypeScript interface for clarity
 interface FeatureCardProps {
   title: string;
-  description: string;
-  icon: string;
+  description: string | React.ReactNode;
+  icon?: string; 
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon }) => (
   <div 
-    className="p-6 bg-neutral-900 border border-neutral-800 rounded-xl shadow-xl transition-colors duration-300
-               hover:border-green-500 hover:shadow-green-900/50" // Added a subtle hover shadow
+    className="p-4 sm:p-6 bg-neutral-900 border border-neutral-800 rounded-xl shadow-xl 
+               transition-all duration-300 hover:border-neutral-600 hover:shadow-2xl hover:scale-[1.02]"
   >
-    <div className="text-4xl mb-4">{icon}</div>
-    <h3 className="text-xl font-semibold mb-2 text-white">{title}</h3>
-    <p className="text-neutral-400 text-base">{description}</p>
+    {icon && <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">{icon}</div>}
+    <h3 className="text-lg sm:text-xl font-semibold mb-2 text-white text-center">{title}</h3>
+    <div className="text-neutral-400 text-sm sm:text-base">{description}</div>
   </div>
 );
 

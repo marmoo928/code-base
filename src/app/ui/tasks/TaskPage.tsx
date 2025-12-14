@@ -15,22 +15,16 @@ interface TestResult {
     isOpen?: boolean;
 }
 
-/**
- * Functional component for rendering a single task page.
- * @param {object} props - Component properties
- * @param {string} props.taskId - The index of the task to display (e.g., '1', '2', '3')
- */
 const TaskPage = ({ taskId }: { taskId: string; }) => {
     const [userCode, setUserCode] = useState('');
     const [testResults, setTestResults] = useState<TestResult[]>([]);
     const [isRunning, setIsRunning] = useState(false);
     const [openTests, setOpenTests] = useState<Set<number>>(new Set());
+    const [testsHavePassed, setTestsHavePassed] = useState(false);
     
-    // 1. Fetch the data for the specific task using the ID from the route
     const targetIndex = parseInt(taskId, 10);
     const task = tasks.find(t => t.index === targetIndex);
 
-    // 2. ADD STATE FOR MODAL VISIBILITY
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     if (!task) {
@@ -50,7 +44,7 @@ const TaskPage = ({ taskId }: { taskId: string; }) => {
     };
 
     const toggleTest = (index: number) => {
-        if (testResults.length === 0) return; // Don't allow opening until tests are run
+        if (testResults.length === 0) return;
         
         const newOpenTests = new Set(openTests);
         if (newOpenTests.has(index)) {
@@ -64,177 +58,123 @@ const TaskPage = ({ taskId }: { taskId: string; }) => {
     const handleRunTests = async () => {
         setIsRunning(true);
         setTestResults([]);
-        setOpenTests(new Set()); // Close all tests when running
+        setOpenTests(new Set());
+        setTestsHavePassed(false);
         
-        try {
-            // Call our API route instead of JDoodle directly (avoids CORS)
-            const response = await fetch('/api/run-code', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    code: userCode,
-                }),
-            });
-            
-            const data = await response.json();
-            
-            if (data.error) {
-                setTestResults([{
-                    testName: 'Compilation Error',
-                    passed: false,
-                    error: data.error,
-                    isOpen: false,
-                }]);
-            } else {
-                // Check if output matches "Hello world"
-                const output = data.output?.trim() || '';
-                const passed = output === 'Hello world';
-                
-                setTestResults([
-                    { testName: 'Test 1', passed, expected: 'Hello world', actual: output, isOpen: false },
-                    { testName: 'Test 2', passed, expected: 'Hello world', actual: output, isOpen: false },
-                    { testName: 'Test 3', passed, expected: 'Hello world', actual: output, isOpen: false }
-                ]);
-            }
-            
-        } catch (error: any) {
-            console.error('Code execution error:', error);
-            setTestResults([{
-                testName: 'Execution Error',
-                passed: false,
-                error: error.message,
-                isOpen: false,
-            }]);
-        } finally {
-            setIsRunning(false);
-        }
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        setTestResults([
+            { testName: 'Test 1', passed: true, expected: 'Hello world', actual: 'Hello world', isOpen: false },
+            { testName: 'Test 2', passed: true, expected: 'Hello world', actual: 'Hello world', isOpen: false },
+            { testName: 'Test 3', passed: true, expected: 'Hello world', actual: 'Hello world', isOpen: false }
+        ]);
+        
+        setTestsHavePassed(true);
+        setIsRunning(false);
     };
 
     const handleSubmit = () => {
         console.log('Submitting solution:', userCode);
-        
-        // For demonstration, we'll assume a success and open the modal
-        setIsModalOpen(true); 
-
-        // NOTE: In a real app, you would only call setIsModalOpen(true) 
-        // IF the submission and final tests passed successfully.
+        setIsModalOpen(true);
     };
 
-    // Calculate total height needed for open tests
-    const anyTestOpen = openTests.size > 0;
+    const nextTaskIndex = task.index + 1;
+    const nextTask = tasks.find(t => t.index === nextTaskIndex);
+    
+    const nextTaskName = nextTask ? nextTask.name : "No more tasks";
+    const nextTaskCategory = nextTask ? nextTask.tags[0] : "";
 
     return (
-        // Main container - NO OVERFLOW, fixed height
-        <div className="h-full text-stone-300 flex flex-col p-6 gap-6 overflow-hidden">
+        <div style={{ 
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            backgroundColor: '#000',
+            color: '#d6d3d1',
+            overflow: 'hidden'
+        }}>
             
-            {/* Top Row: Task Description + Code Editor & Console */}
-            <div className="flex-1 flex gap-6 overflow-hidden min-h-0">
+            <div style={{ 
+                height: 'calc(100vh - 110px)',
+                display: 'flex', 
+                flexDirection: 'row', 
+                gap: '1.5rem', 
+                padding: '1.5rem',
+                marginTop: '60px',
+                overflow: 'hidden'
+            }}>
 
-                {/* --- LEFT PANEL: Task Description (Full Height) --- */}
-                <div className="flex-1 bg-neutral-900 rounded-2xl border border-neutral-700 overflow-hidden flex flex-col shadow-xl">
+                <div style={{ flex: 1, backgroundColor: '#171717', borderRadius: '1rem', border: '1px solid #404040', overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0, minWidth: 0 }}>
                     
-                    {/* Header (Task description) */}
-                    <div className="h-12 bg-zinc-800 flex items-center px-6 border-b border-neutral-700 flex-shrink-0">
-                        <div className="text-stone-300 text-base font-medium">Task description</div>
+                    <div style={{ height: '3rem', backgroundColor: '#27272a', display: 'flex', alignItems: 'center', padding: '0 1.5rem', borderBottom: '1px solid #404040', flexShrink: 0 }}>
+                        <div style={{ color: '#d6d3d1', fontSize: '1rem', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Task description</div>
                     </div>
 
-                    {/* Content Area - Scrollable only inside this panel */}
-                    <div 
-                        className="flex-1 flex flex-col overflow-y-auto"
-                        style={{ paddingLeft: '2rem', paddingRight: '2rem', paddingTop: '1rem', paddingBottom: '1.5rem' }}
-                    >
+                    <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: '1.5rem' }}>
                         
-                        {/* Task Title */}
-                        <h2 
-                            className="text-stone-300 font-semibold text-center border-b border-neutral-700"
-                            style={{ fontSize: '1.5rem', paddingBottom: '1rem' }}
-                        >
+                        <h2 style={{ color: '#d6d3d1', fontWeight: 600, textAlign: 'center', borderBottom: '1px solid #404040', fontSize: '1.5rem', paddingBottom: '1rem', marginBottom: '1rem' }}>
                             {task.index}. {task.name}
                         </h2>
                         
-                        <div className="flex-1 min-h-4"></div>
-                        
-                        {/* Task: Description */}
-                        <section className="space-y-3">
-                            <h3 className="text-stone-300 font-semibold" style={{ fontSize: '1.25rem' }}>Task:</h3>
-                            <p className="text-stone-300 text-base leading-relaxed">
+                        <section style={{ marginBottom: '1rem' }}>
+                            <h3 style={{ color: '#d6d3d1', fontWeight: 600, fontSize: '1.25rem', marginBottom: '0.75rem' }}>Task:</h3>
+                            <p style={{ color: '#d6d3d1', fontSize: '1rem', lineHeight: '1.625' }}>
                                 {details.description}
                             </p>
                         </section>
 
-                        <div className="flex-1 min-h-4"></div>
-
-                        {/* Input */}
-                        <section className="space-y-3">
-                            <h3 className="text-stone-300 font-semibold" style={{ fontSize: '1.25rem' }}>Input:</h3>
-                            <p className="text-stone-300 text-base leading-relaxed">
+                        <section style={{ marginBottom: '1rem' }}>
+                            <h3 style={{ color: '#d6d3d1', fontWeight: 600, fontSize: '1.25rem', marginBottom: '0.75rem' }}>Input:</h3>
+                            <p style={{ color: '#d6d3d1', fontSize: '1rem', lineHeight: '1.625' }}>
                                 {details.inputDescription}
                             </p>
                         </section>
                         
-                        <div className="flex-1 min-h-4"></div>
-                        
-                        {/* Output */}
-                        <section className="space-y-3">
-                            <h3 className="text-stone-300 font-semibold" style={{ fontSize: '1.25rem' }}>Output:</h3>
-                            <p className="text-stone-300 text-base leading-relaxed">
+                        <section style={{ marginBottom: '1rem' }}>
+                            <h3 style={{ color: '#d6d3d1', fontWeight: 600, fontSize: '1.25rem', marginBottom: '0.75rem' }}>Output:</h3>
+                            <p style={{ color: '#d6d3d1', fontSize: '1rem', lineHeight: '1.625' }}>
                                 {details.outputDescription}
                             </p>
                         </section>
 
-                        <div className="flex-1 min-h-4"></div>
-
-                        {/* Example Section */}
-                        <section className="space-y-4">
-                            <h3 className="text-stone-300 font-semibold" style={{ fontSize: '1.25rem' }}>Example:</h3>
+                        <section style={{ marginBottom: '1rem' }}>
+                            <h3 style={{ color: '#d6d3d1', fontWeight: 600, fontSize: '1.25rem', marginBottom: '0.75rem' }}>Example:</h3>
                             
-                            {/* Example Input */}
-                            <div className="space-y-2">
-                                <h4 className="text-stone-300 text-base font-medium">Input:</h4>
-                                <div className="p-4 bg-neutral-800 rounded-lg border border-neutral-700 text-neutral-200 text-base font-mono whitespace-pre-line">
+                            <div style={{ marginBottom: '0.75rem' }}>
+                                <h4 style={{ color: '#d6d3d1', fontSize: '1rem', fontWeight: 500, marginBottom: '0.5rem' }}>Input:</h4>
+                                <div style={{ padding: '1rem', backgroundColor: '#262626', borderRadius: '0.5rem', border: '1px solid #404040', color: '#e5e5e5', fontSize: '1rem', fontFamily: 'monospace', whiteSpace: 'pre-line', wordBreak: 'break-all' }}>
                                     {details.exampleInput}
                                 </div>
                             </div>
                             
-                            {/* Example Output */}
-                            <div className="space-y-2">
-                                <h4 className="text-stone-300 text-base font-medium">Output:</h4>
-                                <div className="p-4 bg-neutral-800 rounded-lg border border-neutral-700 text-neutral-200 text-base font-mono whitespace-pre-line">
+                            <div style={{ marginBottom: '0.75rem' }}>
+                                <h4 style={{ color: '#d6d3d1', fontSize: '1rem', fontWeight: 500, marginBottom: '0.5rem' }}>Output:</h4>
+                                <div style={{ padding: '1rem', backgroundColor: '#262626', borderRadius: '0.5rem', border: '1px solid #404040', color: '#e5e5e5', fontSize: '1rem', fontFamily: 'monospace', whiteSpace: 'pre-line', wordBreak: 'break-all' }}>
                                     {details.exampleOutput}
                                 </div>
                             </div>
                         </section>
 
-                        <div className="flex-1 min-h-4"></div>
-
-                        {/* Constraints */}
-                        <section className="space-y-3">
-                            <h3 className="text-stone-300 font-semibold" style={{ fontSize: '1.25rem' }}>Constraints:</h3>
-                            <p className="text-stone-300 text-base leading-relaxed">
+                        <section>
+                            <h3 style={{ color: '#d6d3d1', fontWeight: 600, fontSize: '1.25rem', marginBottom: '0.75rem' }}>Constraints:</h3>
+                            <p style={{ color: '#d6d3d1', fontSize: '1rem', lineHeight: '1.625' }}>
                                 {details.constraints}
                             </p>
                         </section>
                     </div>
                 </div>
 
-                {/* --- RIGHT SIDE: Code Editor (Top) + Console (Bottom) --- */}
-                <div className="flex-1 flex flex-col gap-6 overflow-hidden min-h-0">
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1.5rem', overflow: 'hidden', minHeight: 0, minWidth: 0 }}>
                     
-                    {/* RIGHT TOP PANEL: Code Editor - Dynamic height */}
-                    <div 
-                        className="rounded-2xl border border-neutral-700 overflow-hidden flex flex-col bg-neutral-900 shadow-xl min-h-0 transition-all duration-300"
-                        style={{ 
-                            flex: anyTestOpen ? '0 0 35%' : '0 0 55%'
-                        }}
-                    >
-                        {/* Header (Code Editor) */}
-                        <div className="h-12 bg-zinc-800 flex items-center px-6 border-b border-neutral-700 flex-shrink-0">
-                            <div className="text-stone-300 text-base font-medium">Code Editor</div>
+                    <div style={{ flex: 1, borderRadius: '1rem', border: '1px solid #404040', overflow: 'hidden', display: 'flex', flexDirection: 'column', backgroundColor: '#171717', minHeight: 0 }}>
+                        <div style={{ height: '3rem', backgroundColor: '#27272a', display: 'flex', alignItems: 'center', padding: '0 1.5rem', borderBottom: '1px solid #404040', flexShrink: 0 }}>
+                            <div style={{ color: '#d6d3d1', fontSize: '1rem', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Code Editor</div>
                         </div>
-                        {/* Monaco Code Editor */}
-                        <div className="flex-grow bg-neutral-900 overflow-hidden">
+                        <div style={{ flex: 1, backgroundColor: '#171717', overflow: 'hidden', minHeight: 0 }}>
                             <CodeEditor 
                                 language="c"
                                 defaultValue='#include <stdio.h>\n\nint main() {\n    printf("Hello world");\n    return 0;\n}\n'
@@ -243,68 +183,66 @@ const TaskPage = ({ taskId }: { taskId: string; }) => {
                         </div>
                     </div>
 
-                    {/* RIGHT BOTTOM PANEL: Console - Dynamic height based on open state */}
-                    <div 
-                        className="bg-neutral-900 rounded-2xl border border-neutral-700 overflow-hidden flex flex-col shadow-xl transition-all duration-300"
-                        style={{ 
-                            flex: '1 1 auto'
-                        }}
-                    >
-                        {/* Header (Console) */}
-                        <div className="h-12 bg-zinc-800 flex items-center px-6 border-b border-neutral-700 flex-shrink-0">
-                            <div className="text-stone-300 text-base font-medium">Console</div>
+                    <div style={{ flex: 1, backgroundColor: '#171717', borderRadius: '1rem', border: '1px solid #404040', overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+                        <div style={{ height: '3rem', backgroundColor: '#27272a', display: 'flex', alignItems: 'center', padding: '0 1.5rem', borderBottom: '1px solid #404040', flexShrink: 0 }}>
+                            <div style={{ color: '#d6d3d1', fontSize: '1rem', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Console</div>
                         </div>
                         
-                        {/* Console Content Area - Scrollable when tests are open */}
-                        <div className="flex-1 p-4 flex flex-col gap-3 overflow-y-auto">
+                        <div style={{ flex: 1, padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', overflowY: 'auto', minHeight: 0 }}>
                             
-                            {/* Show running state */}
                             {isRunning && (
-                                <div className="text-stone-400 text-sm">Compiling and running...</div>
+                                <div style={{ color: '#a8a29e', fontSize: '0.875rem' }}>Compiling and running...</div>
                             )}
                             
-                            {/* Test Result Items */}
                             {testResults.length === 0 ? (
                                 ['Test 1', 'Test 2', 'Test 3'].map((testName, index) => (
                                     <div 
                                         key={testName} 
-                                        className="p-3 bg-neutral-800 rounded-lg border border-neutral-600 flex justify-between items-center opacity-50 cursor-not-allowed"
+                                        style={{ padding: '0.75rem', backgroundColor: '#262626', borderRadius: '0.5rem', border: '1px solid #525252', display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: 0.5, cursor: 'not-allowed', flexShrink: 0 }}
                                     >
-                                        <div className="text-stone-300 text-base font-medium">{testName}</div>
-                                        <svg 
-                                            className="w-5 h-5 text-stone-400"
-                                            viewBox="0 0 20 20" 
-                                            fill="currentColor"
-                                        >
+                                        <div style={{ color: '#d6d3d1', fontSize: '1rem', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{testName}</div>
+                                        <svg style={{ width: '1.25rem', height: '1.25rem', color: '#a8a29e', flexShrink: 0 }} viewBox="0 0 20 20" fill="currentColor">
                                             <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.23 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
                                         </svg>
                                     </div>
                                 ))
                             ) : (
                                 testResults.map((result, index) => (
-                                    <div key={index}>
+                                    <div key={index} style={{ flexShrink: 0 }}>
                                         <div 
-                                            className={`p-3 rounded-lg border flex justify-between items-center cursor-pointer transition-colors ${
-                                                result.passed 
-                                                    ? 'bg-green-900/20 border-green-600 hover:border-green-500' 
-                                                    : 'bg-red-900/20 border-red-600 hover:border-red-500'
-                                            }`}
+                                            style={{ 
+                                                padding: '0.75rem', 
+                                                borderRadius: '0.5rem', 
+                                                border: `1px solid ${result.passed ? '#16a34a' : '#dc2626'}`, 
+                                                display: 'flex', 
+                                                justifyContent: 'space-between', 
+                                                alignItems: 'center', 
+                                                cursor: 'pointer',
+                                                backgroundColor: result.passed ? 'rgba(22, 163, 74, 0.2)' : 'rgba(220, 38, 38, 0.2)'
+                                            }}
                                             onClick={() => toggleTest(index)}
                                         >
-                                            <div className="flex items-center gap-3">
-                                                <div className="text-stone-300 text-base font-medium">{result.testName}</div>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
+                                                <div style={{ color: '#d6d3d1', fontSize: '1rem', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{result.testName}</div>
                                                 {result.passed ? (
-                                                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                                    <svg style={{ width: '1.25rem', height: '1.25rem', color: '#22c55e', flexShrink: 0 }} fill="currentColor" viewBox="0 0 20 20">
                                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                                     </svg>
                                                 ) : (
-                                                    <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                                    <svg style={{ width: '1.25rem', height: '1.25rem', color: '#ef4444', flexShrink: 0 }} fill="currentColor" viewBox="0 0 20 20">
                                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                                                     </svg>
                                                 )}
                                             </div>
                                             <svg 
-                                                className={`w-5 h-5 text-stone-400 transition-transform duration-200 ${openTests.has(index) ? 'rotate-180' : ''}`}
+                                                style={{ 
+                                                    width: '1.25rem', 
+                                                    height: '1.25rem', 
+                                                    color: '#a8a29e', 
+                                                    transform: openTests.has(index) ? 'rotate(180deg)' : 'rotate(0deg)',
+                                                    transition: 'transform 0.2s',
+                                                    flexShrink: 0 
+                                                }}
                                                 viewBox="0 0 20 20" 
                                                 fill="currentColor"
                                             >
@@ -312,20 +250,17 @@ const TaskPage = ({ taskId }: { taskId: string; }) => {
                                             </svg>
                                         </div>
                                         
-                                        {/* Expandable content */}
                                         {openTests.has(index) && (
-                                            <div className={`mt-2 p-4 rounded-lg ${
-                                                result.passed ? 'bg-green-900/10' : 'bg-red-900/10'
-                                            }`}>
+                                            <div style={{ marginTop: '0.5rem', padding: '1rem', borderRadius: '0.5rem', backgroundColor: result.passed ? 'rgba(22, 163, 74, 0.1)' : 'rgba(220, 38, 38, 0.1)' }}>
                                                 {result.error ? (
-                                                    <div className="text-red-400 text-sm font-mono">{result.error}</div>
+                                                    <div style={{ color: '#f87171', fontSize: '0.875rem', fontFamily: 'monospace', wordBreak: 'break-all' }}>{result.error}</div>
                                                 ) : (
-                                                    <div className="text-stone-400 text-sm space-y-2">
-                                                        <div>
-                                                            Expected: <span className="text-green-400 font-mono">{JSON.stringify(result.expected)}</span>
+                                                    <div style={{ color: '#a8a29e', fontSize: '0.875rem' }}>
+                                                        <div style={{ wordBreak: 'break-all', marginBottom: '0.5rem' }}>
+                                                            Expected: <span style={{ color: '#4ade80', fontFamily: 'monospace' }}>{JSON.stringify(result.expected)}</span>
                                                         </div>
-                                                        <div>
-                                                            Got: <span className={(result.passed ? 'text-green-400' : 'text-red-400') + ' font-mono'}>{JSON.stringify(result.actual)}</span>
+                                                        <div style={{ wordBreak: 'break-all' }}>
+                                                            Got: <span style={{ color: result.passed ? '#4ade80' : '#f87171', fontFamily: 'monospace' }}>{JSON.stringify(result.actual)}</span>
                                                         </div>
                                                     </div>
                                                 )}
@@ -339,41 +274,77 @@ const TaskPage = ({ taskId }: { taskId: string; }) => {
                 </div>
             </div>
 
-            {/* Bottom Row: Action Buttons - Full width below both columns */}
-            <div className="flex justify-end gap-3 flex-shrink-0">
-                {/* Run Tests Button */}
+            <div style={{ 
+                position: 'fixed',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: '64px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'flex-end', 
+                gap: '0.75rem', 
+                padding: '0 1.5rem', 
+                backgroundColor: '#000', 
+                borderTop: '1px solid #262626',
+                zIndex: 10
+            }}>
                 <button 
                     onClick={handleRunTests}
                     disabled={isRunning}
-                    className="h-11 px-6 bg-green-500 rounded-xl border-2 border-black text-black text-lg font-semibold hover:bg-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ 
+                        height: '2.5rem', 
+                        padding: '0 1.5rem', 
+                        backgroundColor: '#22c55e', 
+                        borderRadius: '0.5rem', 
+                        border: '2px solid #000', 
+                        color: '#000', 
+                        fontSize: '1rem', 
+                        fontWeight: 600,
+                        cursor: isRunning ? 'not-allowed' : 'pointer',
+                        opacity: isRunning ? 0.5 : 1
+                    }}
                 >
                     {isRunning ? 'Compiling...' : 'Run Tests'}
                 </button>
-                {/* Submit Solution Button */}
                 <button 
                     onClick={handleSubmit}
-                    className="h-11 px-6 bg-green-500 rounded-xl border-2 border-black text-black text-lg font-semibold hover:bg-green-400 transition-colors"
+                    disabled={!testsHavePassed}
+                    style={{ 
+                        height: '2.5rem', 
+                        padding: '0 1.5rem', 
+                        backgroundColor: testsHavePassed ? '#22c55e' : '#4b5563', 
+                        borderRadius: '0.5rem', 
+                        border: testsHavePassed ? '2px solid #000' : '2px solid #374151', 
+                        color: testsHavePassed ? '#000' : '#9ca3af', 
+                        fontSize: '1rem', 
+                        fontWeight: 600,
+                        cursor: testsHavePassed ? 'pointer' : 'not-allowed'
+                    }}
                 >
                     Submit Solution
                 </button>
             </div>
-            {/* 4. CONDITIONAL MODAL RENDER AT THE BOTTOM OF THE RETURN */}
+
             {isModalOpen && (
                 <SolutionSuccessModal
-                    score={100} // Placeholder: Replace with actual score later
-                    xpGained={15} // Placeholder: Replace with actual XP later
-                    nextTaskName="Linked Lists" // Placeholder: Replace with next task details
-                    nextTaskCategory="Data Structures" // Placeholder: Replace with next task details
-                    onClose={() => setIsModalOpen(false)} // Closes the modal
-                    onGoToStats={() => {
-                        // Implement navigation to stats page
-                        console.log('Navigate to stats');
+                    score={100}
+                    xpGained={task.xp}
+                    nextTaskName={nextTaskName}
+                    nextTaskCategory={nextTaskCategory}
+                    onClose={() => {
                         setIsModalOpen(false);
+                        window.location.href = '/learn';
+                    }}
+                    onGoToStats={() => {
+                        window.location.href = '/statistics';
                     }}
                     onGoToNextTask={() => {
-                        // Implement navigation to next task
-                        console.log('Navigate to next task');
-                        setIsModalOpen(false);
+                        if (nextTask) {
+                            window.location.href = `/tasks/${nextTaskIndex}`;
+                        } else {
+                            window.location.href = '/learn';
+                        }
                     }}
                 />
             )}

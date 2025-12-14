@@ -1,9 +1,7 @@
 // /src/app/lib/placeholder-data.ts
 
-// Define the possible statuses for a task
 export type TaskStatus = 'Not solved' | 'In progress' | 'Solved';
 
-// Define the interface for the task details from the image
 export interface TaskDetails {
   description: string;
   inputDescription: string;
@@ -13,29 +11,23 @@ export interface TaskDetails {
   constraints: string;
 }
 
-// Define the interface for a single Task object
 export interface Task {
   index: number;
   name: string;
   tags: string[];
-  difficulty: number; // Represents the number of stars (1 to 5)
+  difficulty: number; 
   status: TaskStatus;
-  xp: number; // NEW PROPERTY ADDED
-  details: TaskDetails; // ADDED TaskDetails
+  xp: number; 
+  details: TaskDetails; 
 }
-
-/**
- * Placeholder data for the coding tasks shown in the image.
- */
 export const tasks: Task[] = [
-  // --- Task 1: Reverse the Stream (Data from the image) ---
   {
     index: 1,
     name: 'Reverse the stream',
     tags: ['Loops', 'Pointers', 'Arrays'],
-    difficulty: 3, // 3 out of 5 stars
+    difficulty: 3,
     status: 'Not solved',
-    xp: 15, // Added XP value
+    xp: 15, 
     details: {
       description: 'Write a program that reverses the order of elements in a stream (array). You are given a sequence of integers. Your task is to print them in reverse order, separated by spaces.',
       inputDescription: 'The first line contains an integer n — the number of elements in the stream. The next line contains n integers separated by spaces.',
@@ -46,14 +38,13 @@ export const tasks: Task[] = [
     },
   },
 
-  // --- Task 2: Pointer maze (Mock Data) ---
   {
     index: 2,
     name: 'Pointer maze',
     tags: ['Memory', 'Pointers'],
-    difficulty: 5, // 5 out of 5 stars
+    difficulty: 5, 
     status: 'In progress',
-    xp: 45, // Added XP value
+    xp: 45,
     details: {
       description: 'Implement a function to find the starting node of a cycle in a singly linked list. If no cycle exists, return null. You must not modify the linked list.',
       inputDescription: 'A single line representing the linked list elements, where the last element points back to a previous element (cycle) or null (no cycle).',
@@ -63,21 +54,19 @@ export const tasks: Task[] = [
       constraints: 'List length up to 10^5. Values are positive integers.',
     },
   },
-
-  // --- Task 3: Algorithm labyrinth (Mock Data) ---
   {
     index: 3,
     name: 'Algorithm labyrinth',
     tags: ['Recursion'],
-    difficulty: 4, // 4 out of 5 stars
+    difficulty: 4,
     status: 'Solved',
-    xp: 35, // Added XP value
+    xp: 35, 
     details: {
       description: 'Calculate the Nth Fibonacci number using a recursive approach, with memoization to optimize performance.',
       inputDescription: 'A single integer N, representing the index of the Fibonacci number to calculate (starting from F0 = 0).',
       outputDescription: 'The Nth Fibonacci number.',
       exampleInput: '8',
-      exampleOutput: '21', // F8 = 21 (0, 1, 1, 2, 3, 5, 8, 13, 21)
+      exampleOutput: '21', 
       constraints: '0 ≤ N ≤ 40',
     },
   },
