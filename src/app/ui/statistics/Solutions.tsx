@@ -1,24 +1,21 @@
-// /app/ui/statistics/SolutionsTab.tsx
-
-import { Task } from '@/lib/placeholder-data';
 import { TaskListHeader } from '@/ui/TaskListHeader';
 import { TaskListItem } from '@/ui/TaskListItem';
 
 interface SolutionsTabProps {
-    solvedTasksList: Task[];
+    solvedTasksList: any[];
 }
 
 export const SolutionsTab = ({ solvedTasksList }: SolutionsTabProps) => {
     return (
-        <div className="max-w-[980px] mx-auto">
+        <div className="w-full">
 
             <TaskListHeader />
             {solvedTasksList.length > 0 ? (
                 <div className="space-y-0">
-                    {solvedTasksList.map(task => (
-                        <TaskListItem 
-                            key={task.index}
-                            task={task}
+                    {solvedTasksList.map((task, index) => (
+                        <TaskListItem
+                            key={task.id}
+                            task={{ ...task, displayIndex: index + 1 }}
                             buttonText="View"
                         />
                     ))}

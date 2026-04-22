@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation'; 
-
+import { usePathname, useRouter } from 'next/navigation'; 
+import { logout } from '@/lib/auth'; // Not usable here, but handleLogout uses API
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -11,11 +11,18 @@ const navLinks = [
   { href: '/statistics', label: 'Statistics' },
 ];
 
-export default function Navbar() {
+export default function Navbar({ user }: { user: any }) {
   const currentPath = usePathname(); 
-  const [isLoggedIn, setIsLoggedIn] = useState(true); 
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const userName = "Coder47";
+  const isLoggedIn = !!user;
+  const userName = user?.name || "";
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.push("/login");
+    router.refresh();
+  };
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -54,6 +61,51 @@ export default function Navbar() {
                 </Link>
               );
             })}
+            {isLoggedIn && (
+               <Link 
+                href="/classes" 
+                className={`
+                  p-2 rounded-lg transition-all duration-200 
+                  hover:bg-neutral-800 hover:text-white
+                  ${currentPath.startsWith('/classes')
+                    ? 'bg-neutral-800 text-green-500 font-semibold' 
+                    : 'text-stone-300'
+                  }
+                `}
+              >
+                Classes
+              </Link>
+            )}
+            {user?.role === 'TEACHER' && (
+              <>
+                <Link 
+                  href="/tasks"
+                  className={`
+                    p-2 rounded-lg transition-all duration-200 
+                    hover:bg-neutral-800 hover:text-white
+                    ${currentPath.startsWith('/tasks')
+                      ? 'bg-neutral-800 text-green-500 font-semibold' 
+                      : 'text-stone-300'
+                    }
+                  `}
+                >
+                  Manage Tasks
+                </Link>
+                <Link 
+                  href="/pathways"
+                  className={`
+                    p-2 rounded-lg transition-all duration-200 
+                    hover:bg-neutral-800 hover:text-white
+                    ${currentPath.startsWith('/pathways')
+                      ? 'bg-neutral-800 text-green-500 font-semibold' 
+                      : 'text-stone-300'
+                    }
+                  `}
+                >
+                  Manage Pathways
+                </Link>
+              </>
+            )}
           </div>
         </div>
 
@@ -64,7 +116,7 @@ export default function Navbar() {
                 Hello, <span className="font-semibold text-green-400">{userName}</span>
               </div>
               <button 
-                onClick={() => setIsLoggedIn(false)}
+                onClick={handleLogout}
                 className="px-4 py-2 bg-neutral-800 text-red-400 rounded-lg text-sm border border-neutral-700 hover:bg-neutral-700 transition-colors"
               >
                 Logout
@@ -72,18 +124,18 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <button 
-                onClick={() => setIsLoggedIn(true)}
+              <Link 
+                href="/login"
                 className="text-stone-300 hover:text-white transition-colors px-3 py-2 text-sm"
               >
                 Log In
-              </button>
-              <button 
-                onClick={() => setIsLoggedIn(true)}
+              </Link>
+              <Link 
+                href="/register"
                 className="px-4 py-2 bg-green-500 text-black rounded-lg text-sm font-semibold hover:bg-green-400 transition-colors"
               >
                 Register
-              </button>
+              </Link>
             </>
           )}
         </div>
@@ -165,13 +217,61 @@ export default function Navbar() {
                 </Link>
               );
             })}
+            {isLoggedIn && (
+              <Link 
+                href="/classes"
+                onClick={closeMobileMenu}
+                className={`
+                  p-3 rounded-lg transition-all duration-200 text-base font-medium
+                  hover:bg-neutral-800 hover:text-white
+                  ${currentPath.startsWith('/classes')
+                    ? 'bg-neutral-800 text-green-500 font-semibold' 
+                    : 'text-stone-300'
+                  }
+                `}
+              >
+                Classes
+              </Link>
+            )}
+            {user?.role === 'TEACHER' && (
+              <>
+                <Link 
+                  href="/tasks"
+                  onClick={closeMobileMenu}
+                  className={`
+                    p-3 rounded-lg transition-all duration-200 text-base font-medium
+                    hover:bg-neutral-800 hover:text-white
+                    ${currentPath.startsWith('/tasks')
+                      ? 'bg-neutral-800 text-green-500 font-semibold' 
+                      : 'text-stone-300'
+                    }
+                  `}
+                >
+                  Manage Tasks
+                </Link>
+                <Link 
+                  href="/pathways"
+                  onClick={closeMobileMenu}
+                  className={`
+                    p-3 rounded-lg transition-all duration-200 text-base font-medium
+                    hover:bg-neutral-800 hover:text-white
+                    ${currentPath.startsWith('/pathways')
+                      ? 'bg-neutral-800 text-green-500 font-semibold' 
+                      : 'text-stone-300'
+                    }
+                  `}
+                >
+                  Manage Pathways
+                </Link>
+              </>
+            )}
           </div>
 
           <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-neutral-800 bg-neutral-900">
             {isLoggedIn ? (
               <button 
                 onClick={() => {
-                  setIsLoggedIn(false);
+                  handleLogout();
                   closeMobileMenu();
                 }}
                 className="w-full px-4 py-3 bg-neutral-800 text-red-400 rounded-lg text-sm font-medium border border-neutral-700 hover:bg-neutral-700 transition-colors"
@@ -180,24 +280,20 @@ export default function Navbar() {
               </button>
             ) : (
               <div className="space-y-2">
-                <button 
-                  onClick={() => {
-                    setIsLoggedIn(true);
-                    closeMobileMenu();
-                  }}
+                <Link 
+                  href="/login"
+                  onClick={closeMobileMenu}
                   className="block w-full px-4 py-3 text-center bg-neutral-800 text-stone-300 rounded-lg text-sm font-medium hover:bg-neutral-700 transition-colors"
                 >
                   Log In
-                </button>
-                <button 
-                  onClick={() => {
-                    setIsLoggedIn(true);
-                    closeMobileMenu();
-                  }}
+                </Link>
+                <Link 
+                  href="/register"
+                  onClick={closeMobileMenu}
                   className="block w-full px-4 py-3 text-center bg-green-500 text-black rounded-lg text-sm font-semibold hover:bg-green-400 transition-colors"
                 >
                   Register
-                </button>
+                </Link>
               </div>
             )}
           </div>

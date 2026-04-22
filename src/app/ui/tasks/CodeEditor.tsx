@@ -9,10 +9,10 @@ interface CodeEditorProps {
   onChange?: (value: string | undefined) => void;
 }
 
-const CodeEditor: React.FC<CodeEditorProps> = ({ 
-  defaultValue = '// Write your code here\n', 
-  language = 'javascript',
-  onChange 
+const CodeEditor: React.FC<CodeEditorProps> = ({
+  defaultValue = '#include <stdio.h>\n\nint main() {\n    // Write your code here\n    \n    return 0;\n}\n',
+  language = 'cpp',
+  onChange
 }) => {
   const [code, setCode] = useState(defaultValue);
 
@@ -26,7 +26,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   return (
     <Editor
       height="100%"
-      defaultLanguage={language}
+      language={language}
       defaultValue={defaultValue}
       theme="vs-dark"
       loading={
@@ -47,10 +47,37 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
         wordWrap: 'on',
         formatOnPaste: true,
         formatOnType: false,
+        suggestOnTriggerCharacters: true,
+        quickSuggestions: {
+          other: true,
+          comments: true,
+          strings: true
+        },
         suggest: {
+          showMethods: true,
+          showFunctions: true,
+          showConstructors: true,
+          showFields: true,
+          showProperties: true,
+          showEvents: true,
+          showOperators: true,
+          showClasses: true,
+          showInterfaces: true,
+          showModules: true,
+          showTypeParameters: true,
+          showUnits: true,
+          showValues: true,
+          showConstants: true,
+          showEnums: true,
+          showEnumMembers: true,
+          showKeywords: true,
+          showWords: true,
+          showColors: true,
+          showFiles: true,
+          showReferences: true,
+          showFolders: true,
           showSnippets: true,
         },
-        quickSuggestions: false,
       }}
     />
   );

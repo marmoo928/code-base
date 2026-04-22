@@ -41,8 +41,8 @@ const SolutionSuccessModal: React.FC<SolutionSuccessModalProps> = ({
                 
                 <div className="flex flex-col items-center pt-20">
                     
-                    <h2 className="text-white text-4xl font-semibold mb-10">
-                        Congratulations!
+                    <h2 className="text-white text-4xl font-semibold mb-10 text-center">
+                        {score === 100 ? "Congratulations!" : "Good effort!"}
                     </h2>
 
                     <div className="flex flex-col items-center mb-8">

@@ -1,5 +1,6 @@
-// /src/app/tasks/[taskId]/page.tsx
 import TaskPage from "@/ui/tasks/TaskPage";
+import { fetchTaskByIndex } from "@/lib/data";
+import { notFound } from "next/navigation";
 
 interface TaskPageProps {
   params: Promise<{
@@ -9,14 +10,21 @@ interface TaskPageProps {
 
 export default async function DynamicTaskRoutePage({ params }: TaskPageProps) {
   const { taskId } = await params;
+  const index = parseInt(taskId, 10);
 
-  if (!taskId) {
+  if (!taskId || isNaN(index)) {
     return (
       <div className="text-white text-center mt-20">
-        Error: Task ID missing from URL.
+        Error: Invalid Task ID in URL. expected a number, got "{taskId}".
       </div>
     );
   }
 
-  return <TaskPage taskId={taskId} />;
+  const task = await fetchTaskByIndex(index);
+
+  if (!task) {
+    notFound();
+  }
+
+  return <TaskPage task={task} />;
 }

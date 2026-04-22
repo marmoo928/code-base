@@ -16,9 +16,8 @@ const MENU_TRANSITION_DURATION = 50;
 
 interface SortButtonProps {
     onSortChange: (key: 'difficulty' | 'status') => void;
-    currentSortKey: string;
-    currentSortOrder: 'asc' | 'desc';
-    statusCycle: 1 | 2 | 3; 
+    difficultySort: 'asc' | 'desc' | 'none';
+    statusSort: number | 'none';
 }
 
 const BUTTON_BASE_STYLE_CLASSES = `
@@ -33,9 +32,9 @@ const DROPDOWN_ITEM_BASE_STYLE = `
   text-white text-xl font-medium
 `;
 
-const DifficultyIndicator = ({ isActive, order }: { isActive: boolean, order: 'asc' | 'desc' }) => {
-    if (!isActive) return null;
-    const arrow = order === 'asc' ? '↑' : '↓'; 
+const DifficultyIndicator = ({ sort }: { sort: 'asc' | 'desc' | 'none' }) => {
+    if (sort === 'none') return null;
+    const arrow = sort === 'asc' ? '↑' : '↓'; 
     return (
         <span className={`ml-auto text-yellow-400 font-bold text-lg`}>
             {arrow}
@@ -43,13 +42,12 @@ const DifficultyIndicator = ({ isActive, order }: { isActive: boolean, order: 'a
     );
 }
 
-const StatusIndicator = ({ isActive, cycle }: 
-    { isActive: boolean, cycle: 1 | 2 | 3 }) => {
-    if (!isActive) return null;
+const StatusIndicator = ({ sort }: { sort: number | 'none' }) => {
+    if (sort === 'none') return null;
     let indicatorContent: string;
     let colorClass: string = 'text-yellow-400';
-    if (cycle === 1) { indicatorContent = '✏️'; colorClass = 'text-blue-400'; } 
-    else if (cycle === 2) { indicatorContent = '✅'; colorClass = 'text-green-400'; } 
+    if (sort === 1) { indicatorContent = '✏️'; colorClass = 'text-blue-400'; } 
+    else if (sort === 2) { indicatorContent = '✅'; colorClass = 'text-green-400'; } 
     else { indicatorContent = '❌'; colorClass = 'text-red-400'; }
     return (
         <span className={`ml-auto ${colorClass} font-bold text-lg`}>
@@ -58,7 +56,7 @@ const StatusIndicator = ({ isActive, cycle }:
     );
 }
 
-export const SortButton = ({ onSortChange, currentSortKey, currentSortOrder, statusCycle }: SortButtonProps) => {
+export const SortButton = ({ onSortChange, difficultySort, statusSort }: SortButtonProps) => {
     const [buttonIsOpen, setButtonIsOpen] = useState(false);
     const [showMenuContent, setShowMenuContent] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
@@ -75,10 +73,9 @@ export const SortButton = ({ onSortChange, currentSortKey, currentSortOrder, sta
         }
     };
 
-    const handleSortClick = (key: 'difficulty' | 'status') => {
+    const handleSortClick = (e: React.MouseEvent, key: 'difficulty' | 'status') => {
+        e.stopPropagation(); // Prevent closing when clicking items
         onSortChange(key);
-        setShowMenuContent(false);
-        setTimeout(() => setButtonIsOpen(false), MENU_TRANSITION_DURATION);
     }
 
     useEffect(() => {
@@ -108,9 +105,7 @@ export const SortButton = ({ onSortChange, currentSortKey, currentSortOrder, sta
         setIsHovered(false);
     };
 
-    const getMenuItemClasses = (key: 'difficulty' | 'status') => {
-        const isActive = currentSortKey === key;
-        
+    const getMenuItemClasses = (isActive: boolean) => {
         const activeStyle = isActive 
             ? `
               bg-gradient-to-r from-green-900/50 to-green-800/50 
@@ -150,24 +145,18 @@ export const SortButton = ({ onSortChange, currentSortKey, currentSortOrder, sta
                 >
                     <div className="space-y-1">
                         <div 
-                            className={getMenuItemClasses('difficulty')}
-                            onClick={() => handleSortClick('difficulty')}
+                            className={getMenuItemClasses(difficultySort !== 'none')}
+                            onClick={(e) => handleSortClick(e, 'difficulty')}
                         >
                             Difficulty
-                            <DifficultyIndicator 
-                                isActive={currentSortKey === 'difficulty'} 
-                                order={currentSortOrder} 
-                            />
+                            <DifficultyIndicator sort={difficultySort} />
                         </div>
                         <div 
-                            className={getMenuItemClasses('status')}
-                            onClick={() => handleSortClick('status')}
+                            className={getMenuItemClasses(statusSort !== 'none')}
+                            onClick={(e) => handleSortClick(e, 'status')}
                         >
                             Status
-                            <StatusIndicator 
-                                isActive={currentSortKey === 'status'} 
-                                cycle={statusCycle} 
-                            />
+                            <StatusIndicator sort={statusSort} />
                         </div>
                     </div>
                 </div>

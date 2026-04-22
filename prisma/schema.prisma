@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "../prisma/ERD.png"
+  theme    = "neutral"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         Role     @default(STUDENT)
+  xpTotal      Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  submissions       Submission[]
+  progress          UserTaskProgress[]
+  
+  classes           Class[]            @relation("StudentClasses")
+  managedClasses    Class[]            @relation("TeacherClasses")
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+}
+
+model Task {
+  id                String   @id @default(uuid())
+  index             Int      @unique
+  name              String
+  difficulty        Int
+  xp                Int
+  description       String
+  inputDescription  String
+  outputDescription String
+  exampleInput      String
+  exampleOutput     String
+  constraints       String
+  createdAt         DateTime @default(now())
+
+  tags        TaskTagMap[]
+  testCases   TestCase[]
+  submissions Submission[]
+  progress    UserTaskProgress[]
+  assignedTo  AssignedTask[]
+
+  pathwayId   String?
+  pathway     Pathway? @relation(fields: [pathwayId], references: [id])
+}
+
+model Pathway {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  tasks Task[]
+}
+
+model Class {
+  id        String   @id @default(uuid())
+  name      String
+  joinCode  String   @unique
+  teacherId String
+  createdAt DateTime @default(now())
+
+  students      User[]         @relation("StudentClasses")
+  teacher       User           @relation("TeacherClasses", fields: [teacherId], references: [id])
+  assignedTasks AssignedTask[]
+}
+
+model AssignedTask {
+  classId    String
+  taskId     String
+  assignedAt DateTime @default(now())
+  dueDate    DateTime?
+
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+  task  Task  @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@id([classId, taskId])
+}
+
+model TaskTag {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  tasks TaskTagMap[]
+}
+
+model TaskTagMap {
+  taskId String
+  tagId  Int
+
+  task Task    @relation(fields: [taskId], references: [id])
+  tag  TaskTag @relation(fields: [tagId], references: [id])
+
+  @@id([taskId, tagId])
+}
+
+model TestCase {
+  id             Int     @id @default(autoincrement())
+  taskId         String
+  input          String
+  expectedOutput String
+  isHidden       Boolean @default(false)
+
+  task              Task               @relation(fields: [taskId], references: [id])
+  submissionResults SubmissionResult[]
+}
+
+model Submission {
+  id          String           @id @default(uuid())
+  userId      String
+  taskId      String
+  code        String
+  language    String
+  status      SubmissionStatus @default(PENDING)
+  xpEarned    Int              @default(0)
+  submittedAt DateTime         @default(now())
+
+  user    User               @relation(fields: [userId], references: [id])
+  task    Task               @relation(fields: [taskId], references: [id])
+  results SubmissionResult[]
+  bestFor UserTaskProgress[]
+}
+
+enum SubmissionStatus {
+  PENDING
+  ACCEPTED
+  WRONG_ANSWER
+  ERROR
+}
+
+model SubmissionResult {
+  id              Int     @id @default(autoincrement())
+  submissionId    String
+  testCaseId      Int
+  passed          Boolean
+  actualOutput    String
+  executionTimeMs Int
+
+  submission Submission @relation(fields: [submissionId], references: [id])
+  testCase   TestCase   @relation(fields: [testCaseId], references: [id])
+}
+
+model UserTaskProgress {
+  userId           String
+  taskId           String
+  status           ProgressStatus @default(NOT_SOLVED)
+  bestSubmissionId String?
+  lastAttemptAt    DateTime       @updatedAt
+
+  user           User        @relation(fields: [userId], references: [id])
+  task           Task        @relation(fields: [taskId], references: [id])
+  bestSubmission Submission? @relation(fields: [bestSubmissionId], references: [id])
+
+  @@id([userId, taskId])
+}
+
+enum ProgressStatus {
+  NOT_SOLVED
+  IN_PROGRESS
+  SOLVED
+}
+
