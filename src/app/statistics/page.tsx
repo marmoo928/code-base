@@ -1,11 +1,12 @@
-import { fetchTasks, fetchUserProfile } from '../lib/data';
+import { fetchTasks, fetchUserProfile, fetchPathways } from '../lib/data';
 import StatisticsClient from '@/ui/statistics/StatisticsClient';
 
 export default async function StatisticsPage() {
-    const [tasks, user] = await Promise.all([
+    const [tasks, user, pathways] = await Promise.all([
         fetchTasks(),
-        fetchUserProfile()
+        fetchUserProfile(),
+        fetchPathways()
     ]);
 
-    return <StatisticsClient tasks={tasks} userXP={user?.xpTotal || 0} />;
+    return <StatisticsClient tasks={tasks} userXP={user?.xpTotal || 0} pathways={pathways} />;
 }

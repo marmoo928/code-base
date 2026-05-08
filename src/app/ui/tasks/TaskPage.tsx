@@ -138,8 +138,8 @@ const TaskPage = ({ task }: { task: any; }) => {
     };
 
     const nextTaskId = task.nextTaskId;
-    const nextTaskName = nextTaskId ? "Next Task" : "No more tasks";
-    const nextTaskCategory = "";
+    const nextTaskName = task.nextTaskName || "Next Task";
+    const nextTaskCategory = task.nextTaskCategory || "General";
 
     return (
         <div style={{

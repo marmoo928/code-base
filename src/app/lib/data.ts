@@ -208,18 +208,66 @@ export async function fetchTaskByIndex(index: number) {
 
         if (!task) return null;
 
-        // Find next task (using index for ordering)
-        const nextTask = await prisma.task.findFirst({
-            where: {
-                index: {
-                    gt: task.index
-                }
-            },
-            orderBy: {
-                index: 'asc'
-            },
-            select: { index: true }
-        });
+        // Find next task using recommendation algorithm
+        const userClasses = userId ? await prisma.user.findUnique({
+            where: { id: userId },
+            select: { classes: { select: { id: true } } }
+        }) : null;
+        const classIds = userClasses?.classes.map(c => c.id) || [];
+
+        const unsolvedCondition = {
+            OR: [
+                { progress: { none: { userId: userId || "" } } },
+                { progress: { some: { userId: userId || "", status: { not: 'SOLVED' } } } }
+            ]
+        };
+
+        let nextTask = null;
+        
+        // Priority 1: Unsolved assigned tasks (with due date)
+        if (classIds.length > 0) {
+            nextTask = await prisma.task.findFirst({
+                where: {
+                    assignedTo: { some: { classId: { in: classIds }, dueDate: { not: null } } },
+                    ...unsolvedCondition
+                },
+                select: { index: true, name: true, tags: { include: { tag: true } } }
+            });
+        }
+
+        // Priority 2: Unsolved task in same pathway, sequentially next
+        if (!nextTask && task.pathwayId) {
+            nextTask = await prisma.task.findFirst({
+                where: {
+                    pathwayId: task.pathwayId,
+                    index: { gt: task.index },
+                    ...unsolvedCondition
+                },
+                orderBy: { index: 'asc' },
+                select: { index: true, name: true, tags: { include: { tag: true } } }
+            });
+        }
+
+        // Priority 3: Any next unsolved task
+        if (!nextTask) {
+            nextTask = await prisma.task.findFirst({
+                where: {
+                    index: { gt: task.index },
+                    ...unsolvedCondition
+                },
+                orderBy: { index: 'asc' },
+                select: { index: true, name: true, tags: { include: { tag: true } } }
+            });
+        }
+
+        // Priority 4: Just the next task regardless of solved status
+        if (!nextTask) {
+            nextTask = await prisma.task.findFirst({
+                where: { index: { gt: task.index } },
+                orderBy: { index: 'asc' },
+                select: { index: true, name: true, tags: { include: { tag: true } } }
+            });
+        }
 
         // Find last submission to restore code and results
         const lastSubmission = userId ? await prisma.submission.findFirst({
@@ -259,6 +307,8 @@ export async function fetchTaskByIndex(index: number) {
                 isOpen: !r.passed && !r.testCase.isHidden
             })) || [],
             nextTaskId: nextTask?.index ? String(nextTask.index) : null,
+            nextTaskName: nextTask?.name || "No more tasks",
+            nextTaskCategory: nextTask?.tags?.[0]?.tag?.name || "General",
             details: {
                 description: task.description,
                 inputDescription: task.inputDescription,

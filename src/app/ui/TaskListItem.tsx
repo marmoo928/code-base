@@ -68,7 +68,7 @@ export const TaskListItem = ({ task, buttonText = "Solve", onTagClick }: TaskLis
 					</div>
 
 					{/* Tags Box */}
-					<div className="flex flex-wrap gap-1.5 justify-center overflow-hidden max-h-[80px]">
+					<div className="flex flex-wrap gap-2 justify-center items-center overflow-hidden max-h-[80px]">
 						{task.tags.map((tag: string) => (
 							<button
 								key={tag}
@@ -77,7 +77,7 @@ export const TaskListItem = ({ task, buttonText = "Solve", onTagClick }: TaskLis
 									e.stopPropagation();
 									onTagClick?.(tag);
 								}}
-								className="px-2 py-0.5 bg-neutral-900 rounded-md border border-neutral-700 flex items-center text-neutral-300 text-[11px] font-bold uppercase tracking-tight whitespace-nowrap hover:bg-neutral-800 hover:border-neutral-500 transition-colors"
+								className="px-2.5 py-1 bg-neutral-800 rounded-lg border border-neutral-600 flex items-center text-neutral-200 text-xs font-bold uppercase tracking-wide whitespace-nowrap hover:bg-neutral-700 hover:border-neutral-400 transition-colors"
 							>
 								{tag}
 							</button>

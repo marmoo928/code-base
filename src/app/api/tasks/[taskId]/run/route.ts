@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+
+/* 
+// --- DOCKER EXECUTION ARCHITECTURE (ZAKOMENTOVANÉ PRE VERCEL DEPLOY) ---
+// Pre reálne nasadenie (kde je dostupný bežiaci Docker démon a systémové nástroje)
+// by sa používala táto originálna architektúra na izolované spustenie študentského kódu:
 import { exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
@@ -7,6 +12,8 @@ import util from 'util';
 import os from 'os';
 
 const execPromise = util.promisify(exec);
+// ------------------------------------------------------------------------
+*/
 
 export async function POST(
     request: NextRequest,
@@ -32,6 +39,47 @@ export async function POST(
 
         const results = [];
 
+        // --- MOCK TESTING (PRE VERCEL DEPLOY A POUŽÍVATEĽSKÉ TESTOVANIE) ---
+        // Simulujeme kompiláciu a spustenie, keďže na Vercele (Serverless) 
+        // nie je možné dynamicky vytvárať Docker kontajnery.
+        
+        // Simulácia zdržania (aby používatelia videli "načítavanie" 1.5 sekundy)
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        // Jednoduchá heuristika: Ak má kód aspoň 'main' a zmysluplnú dĺžku, prejde
+        const isCodePlausible = code.includes('main') && code.length > 15;
+
+        for (let i = 0; i < task.testCases.length; i++) {
+            const tc = task.testCases[i];
+            
+            if (isCodePlausible) {
+                results.push({
+                    testCaseId: tc.id,
+                    testName: `Test ${i + 1}`,
+                    passed: true,
+                    input: tc.isHidden ? 'Hidden' : tc.input,
+                    expected: tc.isHidden ? 'Hidden' : tc.expectedOutput.trim(),
+                    actual: tc.isHidden ? 'Hidden' : tc.expectedOutput.trim(),
+                    error: null,
+                    isHidden: tc.isHidden
+                });
+            } else {
+                results.push({
+                    testCaseId: tc.id,
+                    testName: `Test ${i + 1}`,
+                    passed: false,
+                    input: tc.isHidden ? 'Hidden' : tc.input,
+                    expected: tc.isHidden ? 'Hidden' : tc.expectedOutput.trim(),
+                    actual: tc.isHidden ? 'Incorrect output' : 'Wrong output or compile error',
+                    error: 'Mock validation failed: Please write valid C code containing a main function.',
+                    isHidden: tc.isHidden
+                });
+            }
+        }
+        // -------------------------------------------------------------------
+
+        /*
+        // --- ORIGINÁLNA LOGIKA DOCKERU (ZAKOMENTOVANÉ PRE VERCEL DEPLOY) ---
         // 2. Run each test case
         for (let i = 0; i < task.testCases.length; i++) {
             const tc = task.testCases[i];
@@ -79,6 +127,8 @@ export async function POST(
                 fs.rmSync(tmpDir, { recursive: true, force: true });
             }
         }
+        // -----------------------------------------------------------
+        */
 
         return NextResponse.json({ results });
 

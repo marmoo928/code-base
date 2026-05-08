@@ -7,7 +7,7 @@ import { SolutionsTab } from './Solutions';
 
 type TabType = 'statistics' | 'solutions';
 
-export default function StatisticsClient({ tasks, userXP }: { tasks: any[], userXP: number }) {
+export default function StatisticsClient({ tasks, userXP, pathways = [] }: { tasks: any[], userXP: number, pathways?: any[] }) {
     const [activeTab, setActiveTab] = useState<TabType>('statistics');
     const totalTasks = tasks.length;
     const solvedTasks = tasks.filter(t => t.status === 'Solved').length;
@@ -15,12 +15,12 @@ export default function StatisticsClient({ tasks, userXP }: { tasks: any[], user
     const totalXP = userXP;
     const successRate = solvedTasks > 0 ? '100' : '0';
 
-    const getLevel = (xp: number) => {
-        if (xp === 0) return 'Beginner';
-        if (xp < 50) return 'Rookie Coder';
-        if (xp < 150) return 'Intermediate';
-        if (xp < 300) return 'Advanced';
-        return 'Expert';
+    const getLevelInfo = (xp: number) => {
+        if (xp < 100) return { level: 'Novice', nextLevelXP: 100 };
+        if (xp < 250) return { level: 'Apprentice', nextLevelXP: 250 };
+        if (xp < 500) return { level: 'Intermediate', nextLevelXP: 500 };
+        if (xp < 1000) return { level: 'Advanced', nextLevelXP: 1000 };
+        return { level: 'Master', nextLevelXP: null };
     };
 
     const topTags = tasks
@@ -38,7 +38,9 @@ export default function StatisticsClient({ tasks, userXP }: { tasks: any[], user
 
     const solvedTasksList = tasks.filter(t => t.status === 'Solved' || t.status === 'Submitted' || (t.earnedXP && t.earnedXP > 0));
 
-    const level = getLevel(totalXP);
+    const levelInfo = getLevelInfo(totalXP);
+    const totalPathways = pathways.length;
+    const completedPathways = pathways.filter(p => p.progress === 100).length;
 
     return (
         <div className="min-h-screen w-full text-stone-300 p-8 bg-black">
@@ -56,9 +58,12 @@ export default function StatisticsClient({ tasks, userXP }: { tasks: any[], user
                     solvedTasks={solvedTasks}
                     solvedPercentage={solvedPercentage}
                     totalXP={totalXP}
-                    level={level}
+                    level={levelInfo.level}
+                    nextLevelXP={levelInfo.nextLevelXP}
                     successRate={successRate}
                     sortedTags={sortedTags}
+                    totalPathways={totalPathways}
+                    completedPathways={completedPathways}
                 />
             ) : (
                 <SolutionsTab

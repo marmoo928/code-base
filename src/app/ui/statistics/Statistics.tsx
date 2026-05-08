@@ -8,8 +8,11 @@ interface StatisticsTabProps {
     solvedPercentage: string;
     totalXP: number;
     level: string;
+    nextLevelXP: number | null;
     successRate: string;
     sortedTags: string[];
+    totalPathways: number;
+    completedPathways: number;
 }
 
 export const StatisticsTab = ({
@@ -18,8 +21,11 @@ export const StatisticsTab = ({
     solvedPercentage,
     totalXP,
     level,
+    nextLevelXP,
     successRate,
     sortedTags,
+    totalPathways,
+    completedPathways,
 }: StatisticsTabProps) => {
     return (
         <div className="w-full px-4 sm:px-6 lg:px-0">
@@ -65,9 +71,25 @@ export const StatisticsTab = ({
                 <FeatureCard
                     title="Your Level"
                     description={
-                        <div className="flex flex-col items-center mt-3 sm:mt-4">
-                            <p className="text-green-500 text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-2 sm:mb-3">{totalXP} XP</p>
-                            <p className="text-neutral-500 text-xs sm:text-sm font-medium">{level}</p>
+                        <div className="flex flex-col items-center mt-3 sm:mt-4 w-full px-4">
+                            <p className="text-green-500 text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-1">{totalXP} XP</p>
+                            <p className="text-neutral-500 text-xs sm:text-sm font-medium mb-3">{level}</p>
+                            
+                            {nextLevelXP !== null ? (
+                                <div className="w-full flex flex-col items-center">
+                                    <div className="w-full bg-zinc-700 rounded-full h-2">
+                                        <div 
+                                            className="bg-green-500 h-2 rounded-full transition-all duration-500" 
+                                            style={{ width: `${Math.min((totalXP / nextLevelXP) * 100, 100)}%` }}
+                                        ></div>
+                                    </div>
+                                    <p className="text-[10px] text-neutral-500 mt-2 font-bold uppercase tracking-wider">
+                                        {nextLevelXP - totalXP} XP to {nextLevelXP === 250 ? 'Apprentice' : nextLevelXP === 500 ? 'Intermediate' : nextLevelXP === 1000 ? 'Advanced' : 'Master'}
+                                    </p>
+                                </div>
+                            ) : (
+                                <p className="text-[10px] text-green-500 mt-2 font-bold uppercase tracking-wider">Max Level Reached!</p>
+                            )}
                         </div>
                     }
                 />
@@ -87,7 +109,7 @@ export const StatisticsTab = ({
 
             <div className="mb-6 lg:mb-10">
                 <FeatureCard
-                    title="Activity status"
+                    title="Task completion"
                     description={
                         <div className="mt-3 sm:mt-4">
                             <div className="flex items-center justify-center mb-3 sm:mb-4">
@@ -107,25 +129,27 @@ export const StatisticsTab = ({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-10">
-                
                 <FeatureCard
-                    title="Most common errors"
+                    title="Pathways Completed"
                     description={
-                        <div className="flex items-center justify-center h-16 sm:h-20 mt-3 sm:mt-4">
-                            <p className="text-neutral-500 text-xs sm:text-sm font-medium">No errors found.</p>
+                        <div className="flex flex-col items-center mt-3 sm:mt-4">
+                            <p className="text-green-500 text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-2 sm:mb-3">
+                                {completedPathways} / {totalPathways}
+                            </p>
+                            <p className="text-neutral-500 text-xs sm:text-sm font-medium">Learning paths mastered</p>
                         </div>
                     }
                 />
-
+                
                 <FeatureCard
-                    title="Top used tags"
+                    title="Top used categories"
                     description={
                         <div className="flex flex-wrap justify-center items-center gap-2 px-2 sm:px-4 mt-3 sm:mt-4 min-h-[64px] sm:min-h-[80px]">
                             {sortedTags.length > 0 ? (
                                 sortedTags.map((tag, index) => (
                                     <div 
                                         key={index}
-                                        className="px-2 py-1 sm:px-3 sm:py-2 bg-neutral-800 rounded-lg border border-neutral-500 text-green-500 text-sm sm:text-base font-normal"
+                                        className="px-3 py-1.5 bg-neutral-800 rounded-lg border border-neutral-600 text-green-400 text-sm font-semibold uppercase tracking-wide"
                                     >
                                         {tag}
                                     </div>

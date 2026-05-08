@@ -104,20 +104,21 @@ async function main() {
     const task1 = await prisma.task.create({
         data: {
             index: 1,
-            name: 'Reverse the stream',
+            name: 'Defusing the Binary Bomb',
             difficulty: 2,
-            xp: 15,
-            description: 'Write a program that reverses the order of elements in a stream. You are given a sequence of integers. Your task is to print them in reverse order.',
-            inputDescription: 'The first line contains an integer n (number of elements). The next line contains n integers.',
-            outputDescription: 'Print the same integers in reverse order, separated by spaces.',
-            exampleInput: '5\n1 2 3 4 5',
-            exampleOutput: '5 4 3 2 1',
-            constraints: '1 ≤ n ≤ 1000',
+            xp: 20,
+            description: 'You\'ve discovered a ticking time bomb! The defusal manual says you need to enter the sum of all *even* digits in the bomb\'s serial number. If the sum is strictly greater than 20, you must subtract 5 from the final result. Write a C program that reads the serial number and prints the correct defusal code.',
+            inputDescription: 'A single integer N (the serial number, up to 9 digits).',
+            outputDescription: 'A single integer representing the defusal code.',
+            exampleInput: '4528',
+            exampleOutput: '14',
+            constraints: '0 ≤ N ≤ 999999999',
             pathwayId: pathwayC.id,
             testCases: {
                 create: [
-                    { input: '5\n1 2 3 4 5', expectedOutput: '5 4 3 2 1' },
-                    { input: '3\n10 20 30', expectedOutput: '30 20 10' }
+                    { input: '4528', expectedOutput: '14' },
+                    { input: '86422', expectedOutput: '17' },
+                    { input: '1357', expectedOutput: '0' }
                 ]
             }
         }
@@ -126,19 +127,20 @@ async function main() {
     const task2 = await prisma.task.create({
         data: {
             index: 2,
-            name: 'Pointer maze',
-            difficulty: 5,
-            xp: 70,
-            description: 'Navigate through a linked list and detect if there is a cycle. Return the value of the node where the cycle begins.',
-            inputDescription: 'List elements representation.',
-            outputDescription: 'Start node value or null.',
-            exampleInput: '1 -> 2 -> 3 -> 2',
-            exampleOutput: '2',
-            constraints: 'N < 10000',
+            name: 'The Alchemist\'s Potion',
+            difficulty: 3,
+            xp: 35,
+            description: 'An alchemist has lined up potion ingredients (represented by integers). He needs you to swap the strongest ingredient (maximum value) with the weakest ingredient (minimum value). If there are multiple max/min values, swap the first occurrences. Print the new arrangement.',
+            inputDescription: 'An integer N, followed by N integers representing ingredient strengths.',
+            outputDescription: 'The sequence of integers after the swap, separated by spaces.',
+            exampleInput: '5\n10 3 5 20 7',
+            exampleOutput: '10 20 5 3 7',
+            constraints: '2 ≤ N ≤ 1000',
             pathwayId: pathwayC.id,
             testCases: {
                 create: [
-                    { input: '1 -> 2 -> 3 -> 2', expectedOutput: '2' }
+                    { input: '5\n10 3 5 20 7', expectedOutput: '10 20 5 3 7' },
+                    { input: '4\n1 1 9 9', expectedOutput: '9 1 9 1' }
                 ]
             }
         }
@@ -147,26 +149,137 @@ async function main() {
     const task3 = await prisma.task.create({
         data: {
             index: 3,
-            name: 'Algorithm labyrinth',
+            name: 'Echoes in the Cave',
             difficulty: 4,
-            xp: 35,
-            description: 'Find your way through the recursive labyrinth. Calculate Nth Fibonacci number using recursion.',
-            inputDescription: 'Integer N.',
-            outputDescription: 'Nth Fibonacci number.',
-            exampleInput: '8',
-            exampleOutput: '21',
-            constraints: 'N < 40',
+            xp: 50,
+            description: 'You shout a word into a magical cave. Each time it echoes, it loses its first and last letter, until nothing or only one letter is left. Write a C program that prints all the echoes.',
+            inputDescription: 'A single word consisting of uppercase letters.',
+            outputDescription: 'The word, followed by its echoes, each on a new line.',
+            exampleInput: 'HELLO',
+            exampleOutput: 'HELLO\nELL\nL',
+            constraints: 'String length < 100',
             pathwayId: pathwayAlgorithms.id,
             testCases: {
                 create: [
-                    { input: '8', expectedOutput: '21' }
+                    { input: 'HELLO', expectedOutput: 'HELLO\nELL\nL' },
+                    { input: 'CODE', expectedOutput: 'CODE\nOD' }
+                ]
+            }
+        }
+    });
+
+    const task4 = await prisma.task.create({
+        data: {
+            index: 4,
+            name: 'Space Station Cargo',
+            difficulty: 5,
+            xp: 75,
+            description: 'A space station needs to load cargo crates. Each crate has an ID and a weight. Sort the crates by weight in descending order. If weights are equal, sort by ID in ascending order.',
+            inputDescription: 'An integer N, followed by N pairs of integers (ID, Weight).',
+            outputDescription: 'The IDs of the sorted crates, separated by spaces.',
+            exampleInput: '3\n1 50\n2 100\n3 50',
+            exampleOutput: '2 1 3',
+            constraints: '1 ≤ N ≤ 1000',
+            pathwayId: pathwayAlgorithms.id,
+            testCases: {
+                create: [
+                    { input: '3\n1 50\n2 100\n3 50', expectedOutput: '2 1 3' },
+                    { input: '4\n1 10\n2 20\n3 20\n4 10', expectedOutput: '2 3 1 4' }
+                ]
+            }
+        }
+    });
+
+    const task5 = await prisma.task.create({
+        data: {
+            index: 5,
+            name: 'The Decoder Ring',
+            difficulty: 3,
+            xp: 40,
+            description: 'A spy intercepted a secret message! Every letter has been shifted forward by 3 positions in the alphabet (e.g., A became D). Write a C program to decode the message back to its original form. Note: Keep non-letter characters exactly as they are.',
+            inputDescription: 'A single string (can contain spaces and punctuation).',
+            outputDescription: 'The decoded string.',
+            exampleInput: 'KHOOR ZRUOG',
+            exampleOutput: 'HELLO WORLD',
+            constraints: 'String length < 100',
+            pathwayId: pathwayC.id,
+            testCases: {
+                create: [
+                    { input: 'KHOOR ZRUOG', expectedOutput: 'HELLO WORLD' },
+                    { input: 'VHFUHW FRGH!', expectedOutput: 'SECRET CODE!' }
+                ]
+            }
+        }
+    });
+
+    const task6 = await prisma.task.create({
+        data: {
+            index: 6,
+            name: 'Galactic Fuel Calculator',
+            difficulty: 2,
+            xp: 25,
+            description: 'A spaceship needs to refuel! The fuel required for each planet visited is calculated by dividing the planet\'s mass by 3, rounding down, and subtracting 2. If the calculated fuel is less than zero, treat it as 0. Given a list of planet masses, calculate the total fuel needed for the entire journey.',
+            inputDescription: 'An integer N, followed by N integers representing planet masses.',
+            outputDescription: 'A single integer representing the total fuel required.',
+            exampleInput: '3\n12 14 196',
+            exampleOutput: '67',
+            constraints: '1 ≤ N ≤ 100',
+            pathwayId: pathwayC.id,
+            testCases: {
+                create: [
+                    { input: '3\n12 14 196', expectedOutput: '67' },
+                    { input: '4\n100756 2 4 5', expectedOutput: '33583' }
+                ]
+            }
+        }
+    });
+
+    const task7 = await prisma.task.create({
+        data: {
+            index: 7,
+            name: 'Treasure Map Grid',
+            difficulty: 4,
+            xp: 60,
+            description: 'A pirate has a 2D map of a local archipelago. The map is a grid of 0s (water) and 1s (land). Write a program that counts the total number of land blocks (1s) that are completely surrounded by water (0s) on all 4 sides (top, bottom, left, right). Ignore the edges of the map.',
+            inputDescription: 'Two integers R (rows) and C (cols), followed by the grid values.',
+            outputDescription: 'The count of isolated land blocks.',
+            exampleInput: '4 4\n0 0 0 0\n0 1 0 0\n0 0 1 0\n0 0 0 0',
+            exampleOutput: '2',
+            constraints: '3 ≤ R,C ≤ 50',
+            pathwayId: pathwayAlgorithms.id,
+            testCases: {
+                create: [
+                    { input: '4 4\n0 0 0 0\n0 1 0 0\n0 0 1 0\n0 0 0 0', expectedOutput: '2' },
+                    { input: '3 3\n1 1 1\n1 0 1\n1 1 1', expectedOutput: '0' }
+                ]
+            }
+        }
+    });
+
+    const task8 = await prisma.task.create({
+        data: {
+            index: 8,
+            name: 'Cybernetic Implants',
+            difficulty: 3,
+            xp: 45,
+            description: 'An underground cyber-doctor needs to filter out weak patients. You are given a minimum tolerance level X, and a list of patients with their tolerance values. Create a new list containing only patients whose tolerance is greater than or equal to X, and print their values.',
+            inputDescription: 'An integer X (min tolerance), followed by N (number of patients), then N integers.',
+            outputDescription: 'The filtered tolerance values, separated by space.',
+            exampleInput: '50\n5\n10 60 40 100 50',
+            exampleOutput: '60 100 50',
+            constraints: '1 ≤ N ≤ 1000',
+            pathwayId: pathwayAlgorithms.id,
+            testCases: {
+                create: [
+                    { input: '50\n5\n10 60 40 100 50', expectedOutput: '60 100 50' },
+                    { input: '100\n3\n99 10 50', expectedOutput: '' }
                 ]
             }
         }
     });
 
     // 6. Add Tags
-    const tags = ['Loops', 'Pointers', 'Recursion', 'Memory'];
+    const tags = ['Conditions', 'Arrays', 'Recursion', 'Sorting', 'Logic', 'Strings', 'Math'];
     for (const name of tags) {
         const tag = await prisma.taskTag.upsert({
             where: { name },
@@ -174,14 +287,29 @@ async function main() {
             create: { name },
         });
 
-        if (name === 'Loops' || name === 'Pointers') {
+        if (name === 'Conditions') {
             await prisma.taskTagMap.create({ data: { taskId: task1.id, tagId: tag.id } });
         }
-        if (name === 'Pointers' || name === 'Memory') {
+        if (name === 'Arrays') {
             await prisma.taskTagMap.create({ data: { taskId: task2.id, tagId: tag.id } });
+            await prisma.taskTagMap.create({ data: { taskId: task7.id, tagId: tag.id } });
+            await prisma.taskTagMap.create({ data: { taskId: task8.id, tagId: tag.id } });
         }
         if (name === 'Recursion') {
             await prisma.taskTagMap.create({ data: { taskId: task3.id, tagId: tag.id } });
+        }
+        if (name === 'Sorting') {
+            await prisma.taskTagMap.create({ data: { taskId: task4.id, tagId: tag.id } });
+        }
+        if (name === 'Strings') {
+            await prisma.taskTagMap.create({ data: { taskId: task5.id, tagId: tag.id } });
+        }
+        if (name === 'Math') {
+            await prisma.taskTagMap.create({ data: { taskId: task6.id, tagId: tag.id } });
+        }
+        if (name === 'Logic') {
+            await prisma.taskTagMap.create({ data: { taskId: task7.id, tagId: tag.id } });
+            await prisma.taskTagMap.create({ data: { taskId: task8.id, tagId: tag.id } });
         }
     }
 
