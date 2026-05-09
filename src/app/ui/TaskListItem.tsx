@@ -18,6 +18,7 @@ export const TaskListItem = ({ task, buttonText = "Solve", onTagClick }: TaskLis
 		task.status === 'Solved' ? 'View' : 
 		task.status === 'Submitted' ? 'Continue' : 
 		buttonText;
+	const isSolved = task.status === 'Solved';
 
 	// <-- NEW: Define click handler for the Solve button
 	const handleSolveClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -49,19 +50,27 @@ export const TaskListItem = ({ task, buttonText = "Solve", onTagClick }: TaskLis
 						</div>
 						<div className="flex items-center gap-3">
 							{task.isRequired && (
-								<span className="flex items-center gap-1 bg-red-500/10 text-red-500 text-[10px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded border border-red-500/20">
+								<span className={`flex items-center gap-1 text-[10px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded border ${isSolved ? 'bg-green-500/10 text-green-500 border-green-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
 									<svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+										{isSolved ? (
+											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+										) : (
+											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+										)}
 									</svg>
 									Required
 								</span>
 							)}
 							{task.deadline && (
-								<div className="text-red-500/60 text-[11px] font-black uppercase tracking-tight flex items-center gap-1">
+								<div className={`text-[11px] font-black uppercase tracking-tight flex items-center gap-1 ${isSolved ? 'text-green-500/60' : 'text-red-500/60'}`}>
 									<svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+										{isSolved ? (
+											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+										) : (
+											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+										)}
 									</svg>
-									Due: {new Date(task.deadline).toLocaleDateString()}
+									{isSolved ? 'Done' : `Due: ${new Date(task.deadline).toLocaleDateString()}`}
 								</div>
 							)}
 						</div>
