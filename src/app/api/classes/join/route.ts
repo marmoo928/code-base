@@ -40,8 +40,8 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({
             success: true,
-            message: `Successfully joined class: ${updatedUser.class?.name}`,
-            class: updatedUser.class
+            message: `Successfully joined class: ${targetClass.name}`,
+            class: targetClass
         });
 
     } catch (error: any) {

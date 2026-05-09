@@ -45,7 +45,7 @@ export default async function ClassesOverviewPage() {
                                         <div className="bg-stone-800 text-stone-400 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg">
                                             {c.studentCount} Students
                                         </div>
-                                        {isTeacher && c.joinCode && (
+                                        {isTeacher && typeof c.joinCode === 'string' && (
                                             <div className="text-[10px] text-indigo-400 font-mono font-bold tracking-widest bg-indigo-500/10 px-2 py-0.5 rounded-md">
                                                 {c.joinCode}
                                             </div>

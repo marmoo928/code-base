@@ -218,7 +218,7 @@ export async function fetchTaskByIndex(index: number) {
         const unsolvedCondition = {
             OR: [
                 { progress: { none: { userId: userId || "" } } },
-                { progress: { some: { userId: userId || "", status: { not: 'SOLVED' } } } }
+                { progress: { some: { userId: userId || "", status: { not: 'SOLVED' as any } } } }
             ]
         };
 

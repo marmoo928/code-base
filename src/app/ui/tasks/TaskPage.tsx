@@ -21,8 +21,8 @@ const TaskPage = ({ task }: { task: any; }) => {
     const initialResults = task.lastSubmittedResults || [];
     const [testResults, setTestResults] = useState<TestResult[]>(initialResults);
     const [isRunning, setIsRunning] = useState(false);
-    const [openTests, setOpenTests] = useState<Set<number>>(new Set(initialResults.filter(r => !r.passed).map((_, i) => i)));
-    const [testsHavePassed, setTestsHavePassed] = useState(initialResults.length > 0 && initialResults.every(r => r.passed));
+    const [openTests, setOpenTests] = useState<Set<number>>(new Set(initialResults.filter((r: any) => !r.passed).map((_: any, i: number) => i)));
+    const [testsHavePassed, setTestsHavePassed] = useState(initialResults.length > 0 && initialResults.every((r: any) => r.passed));
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
