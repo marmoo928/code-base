@@ -306,13 +306,13 @@ const TaskPage = ({ task }: { task: any; }) => {
                                                 ) : (
                                                     <div style={{ color: '#a8a29e', fontSize: '0.875rem' }}>
                                                         <div style={{ wordBreak: 'break-all', marginBottom: '0.5rem' }}>
-                                                            Input: <span style={{ color: '#d6d3d1', fontFamily: 'monospace' }}>{JSON.stringify(result.input)}</span>
+                                                            Input: <span style={{ color: '#d6d3d1', fontFamily: 'monospace', whiteSpace: 'pre-wrap', display: 'block', marginTop: '0.25rem', backgroundColor: '#171717', padding: '0.5rem', borderRadius: '0.25rem' }}>{String(result.input)}</span>
                                                         </div>
                                                         <div style={{ wordBreak: 'break-all', marginBottom: '0.5rem' }}>
-                                                            Expected: <span style={{ color: '#4ade80', fontFamily: 'monospace' }}>{JSON.stringify(result.expected)}</span>
+                                                            Expected: <span style={{ color: '#4ade80', fontFamily: 'monospace', whiteSpace: 'pre-wrap', display: 'block', marginTop: '0.25rem', backgroundColor: '#171717', padding: '0.5rem', borderRadius: '0.25rem' }}>{String(result.expected)}</span>
                                                         </div>
                                                         <div style={{ wordBreak: 'break-all' }}>
-                                                            Got: <span style={{ color: result.passed ? '#4ade80' : '#f87171', fontFamily: 'monospace' }}>{JSON.stringify(result.actual)}</span>
+                                                            Got: <span style={{ color: result.passed ? '#4ade80' : '#f87171', fontFamily: 'monospace', whiteSpace: 'pre-wrap', display: 'block', marginTop: '0.25rem', backgroundColor: '#171717', padding: '0.5rem', borderRadius: '0.25rem' }}>{String(result.actual)}</span>
                                                         </div>
                                                     </div>
                                                 )}
