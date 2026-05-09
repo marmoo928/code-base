@@ -28,7 +28,7 @@ export default function Navbar({ user }: { user: any }) {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 grid grid-cols-3 items-center py-3 sm:py-4 border-b border-neutral-800 px-4 sm:px-6 lg:px-8 bg-neutral-950/90 backdrop-blur-sm">
+      <nav className="sticky top-0 z-50 grid grid-cols-2 lg:grid-cols-3 items-center py-3 sm:py-4 border-b border-neutral-800 px-4 sm:px-6 lg:px-8 bg-neutral-950/90 backdrop-blur-sm">
         
         <div className="flex items-center justify-start">
           <Link 
@@ -49,7 +49,7 @@ export default function Navbar({ user }: { user: any }) {
                   key={link.href}
                   href={link.href} 
                   className={`
-                    p-2 rounded-lg transition-all duration-200 
+                    p-2 rounded-lg transition-all duration-200 text-center whitespace-nowrap
                     hover:bg-neutral-800 hover:text-white
                     ${isActive 
                       ? 'bg-neutral-800 text-green-500 font-semibold' 
@@ -65,7 +65,7 @@ export default function Navbar({ user }: { user: any }) {
                <Link 
                 href="/classes" 
                 className={`
-                  p-2 rounded-lg transition-all duration-200 
+                  p-2 rounded-lg transition-all duration-200 text-center whitespace-nowrap
                   hover:bg-neutral-800 hover:text-white
                   ${currentPath.startsWith('/classes')
                     ? 'bg-neutral-800 text-green-500 font-semibold' 
@@ -81,7 +81,7 @@ export default function Navbar({ user }: { user: any }) {
                 <Link 
                   href="/tasks"
                   className={`
-                    p-2 rounded-lg transition-all duration-200 
+                    p-2 rounded-lg transition-all duration-200 text-center whitespace-nowrap
                     hover:bg-neutral-800 hover:text-white
                     ${currentPath.startsWith('/tasks')
                       ? 'bg-neutral-800 text-green-500 font-semibold' 
@@ -94,7 +94,7 @@ export default function Navbar({ user }: { user: any }) {
                 <Link 
                   href="/pathways"
                   className={`
-                    p-2 rounded-lg transition-all duration-200 
+                    p-2 rounded-lg transition-all duration-200 text-center whitespace-nowrap
                     hover:bg-neutral-800 hover:text-white
                     ${currentPath.startsWith('/pathways')
                       ? 'bg-neutral-800 text-green-500 font-semibold' 
@@ -169,12 +169,12 @@ export default function Navbar({ user }: { user: any }) {
         <div 
           className={`
             absolute right-0 top-0 h-full w-64 bg-neutral-900 border-l border-neutral-800 
-            transform transition-transform duration-300 ease-in-out
+            transform transition-transform duration-300 ease-in-out flex flex-col
             ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}
           `}
           onClick={(e) => e.stopPropagation()} 
         >
-          <div className="flex justify-between items-center p-4 border-b border-neutral-800">
+          <div className="flex justify-between items-center p-4 border-b border-neutral-800 shrink-0">
             <span className="text-lg font-bold text-green-500">Menu</span>
             <button
               onClick={closeMobileMenu}
@@ -188,14 +188,14 @@ export default function Navbar({ user }: { user: any }) {
           </div>
 
           {isLoggedIn && (
-            <div className="p-4 border-b border-neutral-800">
+            <div className="p-4 border-b border-neutral-800 shrink-0">
               <div className="text-stone-300 text-sm">
                 Hello, <span className="font-semibold text-green-400">{userName}</span>
               </div>
             </div>
           )}
 
-          <div className="flex flex-col p-4 space-y-2">
+          <div className="flex-1 flex flex-col p-4 space-y-2 overflow-y-auto">
             {navLinks.map((link) => {
               const isActive = currentPath === link.href || (currentPath.startsWith(link.href) && link.href !== '/');
 
@@ -267,7 +267,7 @@ export default function Navbar({ user }: { user: any }) {
             )}
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-neutral-800 bg-neutral-900">
+          <div className="p-4 border-t border-neutral-800 bg-neutral-900 shrink-0">
             {isLoggedIn ? (
               <button 
                 onClick={() => {

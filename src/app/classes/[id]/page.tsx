@@ -51,10 +51,10 @@ export default async function ClassPage({ params }: { params: Promise<{ id: stri
                             <TaskListHeader />
                             <ul className="space-y-4">
                                 {classData.tasks.length > 0 ? (
-                                    classData.tasks.map((task) => (
+                                    classData.tasks.map((task, index) => (
                                         <TaskListItem 
                                             key={task.id} 
-                                            task={task} 
+                                            task={{ ...task, displayIndex: index + 1 }} 
                                         />
                                     ))
                                 ) : (

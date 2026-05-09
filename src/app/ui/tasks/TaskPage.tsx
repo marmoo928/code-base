@@ -155,17 +155,9 @@ const TaskPage = ({ task }: { task: any; }) => {
             overflow: 'hidden'
         }}>
 
-            <div style={{
-                height: 'calc(100vh - 110px)',
-                display: 'flex',
-                flexDirection: 'row',
-                gap: '1.5rem',
-                padding: '1.5rem',
-                marginTop: '60px',
-                overflow: 'hidden'
-            }}>
+            <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 p-4 lg:p-6 mt-[60px] h-[calc(100vh-110px)] overflow-y-auto lg:overflow-hidden">
 
-                <div style={{ flex: 1, backgroundColor: '#171717', borderRadius: '1rem', border: '1px solid #404040', overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0, minWidth: 0 }}>
+                <div className="flex-1 bg-[#171717] rounded-2xl border border-[#404040] overflow-hidden flex flex-col min-h-[400px] lg:min-h-0 min-w-0 shrink-0 lg:shrink">
 
                     <div style={{ height: '3rem', backgroundColor: '#27272a', display: 'flex', alignItems: 'center', padding: '0 1.5rem', borderBottom: '1px solid #404040', flexShrink: 0 }}>
                         <div style={{ color: '#d6d3d1', fontSize: '1rem', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Task description</div>
@@ -225,9 +217,9 @@ const TaskPage = ({ task }: { task: any; }) => {
                     </div>
                 </div>
 
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1.5rem', overflow: 'hidden', minHeight: 0, minWidth: 0 }}>
+                <div className="flex-1 flex flex-col gap-4 lg:gap-6 overflow-hidden min-h-[600px] lg:min-h-0 min-w-0 shrink-0 lg:shrink">
 
-                    <div style={{ flex: 1, borderRadius: '1rem', border: '1px solid #404040', overflow: 'hidden', display: 'flex', flexDirection: 'column', backgroundColor: '#171717', minHeight: 0 }}>
+                    <div className="flex-1 bg-[#171717] rounded-2xl border border-[#404040] overflow-hidden flex flex-col min-h-[300px] lg:min-h-0">
                         <div style={{ height: '3rem', backgroundColor: '#27272a', display: 'flex', alignItems: 'center', padding: '0 1.5rem', borderBottom: '1px solid #404040', flexShrink: 0 }}>
                             <div style={{ color: '#d6d3d1', fontSize: '1rem', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Code Editor</div>
                         </div>
@@ -240,7 +232,7 @@ const TaskPage = ({ task }: { task: any; }) => {
                         </div>
                     </div>
 
-                    <div style={{ flex: 1, backgroundColor: '#171717', borderRadius: '1rem', border: '1px solid #404040', overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+                    <div className="flex-1 bg-[#171717] rounded-2xl border border-[#404040] overflow-hidden flex flex-col min-h-[250px] lg:min-h-0">
                         <div style={{ height: '3rem', backgroundColor: '#27272a', display: 'flex', alignItems: 'center', padding: '0 1.5rem', borderBottom: '1px solid #404040', flexShrink: 0 }}>
                             <div style={{ color: '#d6d3d1', fontSize: '1rem', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Console</div>
                         </div>
