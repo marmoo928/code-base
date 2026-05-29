@@ -2,8 +2,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// ERD generátor odstránený pre potreby Vercel buildu
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

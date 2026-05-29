@@ -1,9 +1,8 @@
 "use client";
-// ^ IMPORTANT: Added directive to make this a Client Component
 
 import { DifficultyStars } from "@/ui/learn/DifficultyStars";
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'; // <-- NEW: Import useRouter
+import { useRouter } from 'next/navigation';
 
 interface TaskListItemProps {
 	task: any;
@@ -12,7 +11,7 @@ interface TaskListItemProps {
 }
 
 export const TaskListItem = ({ task, buttonText = "Solve", onTagClick }: TaskListItemProps) => {
-	const router = useRouter(); // <-- NEW: Initialize router
+	const router = useRouter();
 	const taskPath = `/tasks/${task.index}`;
 	const displayButtonText = 
 		task.status === 'Solved' ? 'View' : 
@@ -20,7 +19,6 @@ export const TaskListItem = ({ task, buttonText = "Solve", onTagClick }: TaskLis
 		buttonText;
 	const isSolved = task.status === 'Solved';
 
-	// <-- NEW: Define click handler for the Solve button
 	const handleSolveClick = (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.stopPropagation(); // 1. Prevents the click from activating the outer Link/Card
 		router.push(taskPath); // 2. Imperatively navigates to the task page

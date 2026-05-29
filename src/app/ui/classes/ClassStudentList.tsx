@@ -349,20 +349,20 @@ export default function ClassStudentList({ classId, joinCode, className }: Class
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-black/50 border-b border-neutral-800">
-                                <th className="px-8 py-5 text-stone-400 font-bold text-xs uppercase tracking-widest">Student</th>
-                                <th className="px-8 py-5 text-stone-400 font-bold text-xs uppercase tracking-widest text-center">
+                                <th className="w-[30%] px-8 py-5 text-stone-400 font-bold text-xs uppercase tracking-widest">Student</th>
+                                <th className="w-[15%] px-8 py-5 text-stone-400 font-bold text-xs uppercase tracking-widest text-center">
                                     {activeAssignmentId ? 'Status' : 'Total XP'}
                                 </th>
-                                <th className="px-8 py-5 text-stone-400 font-bold text-xs uppercase tracking-widest text-center">
+                                <th className="w-[20%] px-8 py-5 text-stone-400 font-bold text-xs uppercase tracking-widest text-center">
                                     {activeAssignmentId ? 'Submitted At' : 'Tasks Solved'}
                                 </th>
-                                <th className="px-8 py-5 text-stone-400 font-bold text-xs uppercase tracking-widest text-center">
+                                <th className="w-[15%] px-8 py-5 text-stone-400 font-bold text-xs uppercase tracking-widest text-center">
                                     {activeAssignmentId ? 'On Time' : 'Overall Progress'}
                                 </th>
                                 {activeAssignmentId ? (
-                                    <th className="px-8 py-5 text-stone-400 font-bold text-xs uppercase tracking-widest">Action</th>
+                                    <th className="w-[20%] px-8 py-5 text-stone-400 font-bold text-xs uppercase tracking-widest text-center">Action</th>
                                 ) : (
-                                    <th className="px-8 py-5 text-stone-400 font-bold text-xs uppercase tracking-widest text-right">Joined</th>
+                                    <th className="w-[20%] px-8 py-5 text-stone-400 font-bold text-xs uppercase tracking-widest text-right">Joined</th>
                                 )}
                             </tr>
                         </thead>
@@ -452,12 +452,12 @@ export default function ClassStudentList({ classId, joinCode, className }: Class
                                                 </div>
                                             )}
                                         </td>
-                                        <td className={`px-8 py-5 ${!activeAssignmentId ? 'text-right' : ''}`}>
+                                        <td className={`px-8 py-5 ${!activeAssignmentId ? 'text-right' : 'text-center'}`}>
                                             {activeAssignmentId ? (
                                                 student.taskStatus === 'SOLVED' || student.taskStatus === 'IN_PROGRESS' ? (
                                                     <button
                                                         onClick={() => handleViewSolution(student)}
-                                                        className="text-indigo-400 hover:text-white hover:bg-indigo-600 text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 px-3 py-1.5 rounded-xl border border-indigo-500/30 hover:border-indigo-400 ml-auto"
+                                                        className="mx-auto text-indigo-400 hover:text-white hover:bg-indigo-600 text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 px-3 py-1.5 rounded-xl border border-indigo-500/30 hover:border-indigo-400 w-fit"
                                                     >
                                                         View Solution
                                                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

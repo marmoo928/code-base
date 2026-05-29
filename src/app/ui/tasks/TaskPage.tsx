@@ -5,7 +5,7 @@ import CodeEditor from '@/ui/tasks/CodeEditor';
 import SolutionSuccessModal from './SolutionSuccessModal';
 
 interface TestResult {
-    testCaseId: number; // Added to track which test case this result belongs to
+    testCaseId: number;
     testName: string;
     passed: boolean;
     input?: any;
