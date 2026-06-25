@@ -3,7 +3,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ## 📺 Demo
 
 You can watch a live video demonstration of the application here:
-- **[Watch the Video Demo]([SEM_VLOZ_SVOJ_LINK_NA_VIDEO](https://youtu.be/tWb-k3C4h8c))**
+- **[Watch the Video Demo](https://youtu.be/tWb-k3C4h8c)**
 
 ## Getting Started
 
